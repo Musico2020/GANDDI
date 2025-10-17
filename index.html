@@ -374,7 +374,7 @@ header.visible {
 .ceo-role { color:var(--secondary); margin-bottom:12px; font-weight:600; }
 .ceo-bio { color:var(--text-muted); line-height:1.6; }
 
-/* CARRUSEL DE LOGOS DE EMPRESAS CLIENTE */
+/* CARRUSEL DE LOGOS DE EMPRESAS CLIENTE - CON COLORES ORIGINALES */
 .clients-section {
     padding: 80px 0;
     background: var(--primary-dark);
@@ -422,31 +422,33 @@ header.visible {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(255, 255, 255, 0.03);
+    background: white; /* Fondo blanco para mejor contraste */
     border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     transition: all 0.3s ease;
     padding: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .client-logo:hover {
     transform: translateY(-5px);
-    background: rgba(255, 255, 255, 0.06);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
 }
 
 .client-logo img {
     max-width: 100%;
     max-height: 70px;
     object-fit: contain;
-    filter: brightness(0) invert(1);
-    opacity: 0.8;
-    transition: opacity 0.3s ease;
+    /* QUITAMOS CUALQUIER FILTRO PARA MANTENER COLORES ORIGINALES */
+    filter: none !important;
+    opacity: 1 !important;
+    transition: transform 0.3s ease;
 }
 
 .client-logo:hover img {
-    opacity: 1;
-    filter: brightness(0) invert(1) drop-shadow(0 0 5px rgba(182, 23, 225, 0.5));
+    transform: scale(1.05);
+    /* SIN FILTROS EN HOVER TAMBIÉN */
+    filter: none !important;
 }
 
 /* Animación del carrusel */
@@ -643,7 +645,7 @@ header.visible {
         <div class="container">
             <div class="section-title">
                 <h2>Nuestros Servicios</h2>
-                <p>Contamos con todo el conocimiento en normatividad del sector de salud y entregamos la imformacion de su ips a tiempo con sus respectivos reportes</p>
+                <p>Soluciones de analytics e inteligencia de datos diseñadas específicamente para el sector salud</p>
             </div>
 
             <div class="services-grid">
@@ -656,8 +658,8 @@ header.visible {
                             <rect x="15" y="3" width="3" height="18" rx="0.6"></rect>
                         </svg>
                     </div>
-                   <h3>Radicacion de Rips con la nueva normativodad Json</h3>
-                    <p>Implementamos nuestros conocimientos para una mejor calidad de datos en las radicaciones y dar una mejor estadisticas en que estamos fallando y en que no.</p>
+                    <h3>Analytics Avanzado</h3>
+                    <p>Implementamos sistemas que transforman datos crudos en insights accionables: modelos ML, pipelines robustos y validación estadística.</p>
                 </div>
 
                 <!-- Business Intelligence -->
@@ -670,8 +672,8 @@ header.visible {
                             <rect x="3" y="13" width="8" height="6" rx="1"></rect>
                         </svg>
                     </div>
-                    <h3>Radicacion de la resolucion 202 del 2021</h3>
-                    <p>Contamos con un equipo especializado en correcion de errores y con gran conocimiento sobre cada parametro sobre la resolucion y capaces de resolver errores en las 118 variables de la misma</p>
+                    <h3>Business Intelligence</h3>
+                    <p>Dashboards interactivos y reportes automatizados para visibilidad operativa y toma de decisiones basada en datos.</p>
                 </div>
 
                 <!-- Data Visualization -->
@@ -789,47 +791,47 @@ header.visible {
                 <div class="clients-track">
                     <!-- Logos de empresas - puedes reemplazar estas imágenes con las de tus clientes -->
                     <div class="client-logo">
-                        <img src="win.png" alt="Cliente 1">
-                    </div>
-                    <div class="client-logo">
-                        <img src="coo.png" alt="Cliente 2">
-                    </div>
-                    <div class="client-logo">
-                        <img src="caja.png" alt="Cliente 3">
-                    </div>
-                    <div class="client-logo">
-                        <img src="dus.png" alt="Cliente 4">
-                    </div>
-                    <div class="client-logo">
-                        <img src="nueva.png" alt="Cliente 5">
-                    </div>
-                    <div class="client-logo">
-                        <img src="coo.png" alt="Cliente 6">
-                    </div>
-                    <div class="client-logo">
-                        <img src="win.png" alt="Cliente 7">
-                    </div>
-                    <!-- Duplicamos los logos para crear un efecto de carrusel infinito -->
-                    <div class="client-logo">
                         <img src="caja.png" alt="Cliente 1">
                     </div>
                     <div class="client-logo">
                         <img src="coo.png" alt="Cliente 2">
                     </div>
                     <div class="client-logo">
-                        <img src="win.png" alt="Cliente 3">
+                        <img src="nueva.png" alt="Cliente 3">
                     </div>
                     <div class="client-logo">
-                        <img src="dus.png" alt="Cliente 4">
+                        <img src="win.png" alt="Cliente 4">
                     </div>
                     <div class="client-logo">
-                        <img src="nueva.png" alt="Cliente 5">
+                        <img src="coo.png" alt="Cliente 5">
                     </div>
                     <div class="client-logo">
-                        <img src="caja.png" alt="Cliente 6">
+                        <img src="nueva.png" alt="Cliente 6">
                     </div>
                     <div class="client-logo">
-                        <img src="win.png" alt="Cliente 7">
+                        <img src="dus.png" alt="Cliente 7">
+                    </div>
+                    <!-- Duplicamos los logos para crear un efecto de carrusel infinito -->
+                    <div class="client-logo">
+                        <img src="win.png" alt="Cliente 1">
+                    </div>
+                    <div class="client-logo">
+                        <img src="caja.png" alt="Cliente 2">
+                    </div>
+                    <div class="client-logo">
+                        <img src="nueva.png" alt="Cliente 3">
+                    </div>
+                    <div class="client-logo">
+                        <img src="caja.png" alt="Cliente 4">
+                    </div>
+                    <div class="client-logo">
+                        <img src="dus.png" alt="Cliente 5">
+                    </div>
+                    <div class="client-logo">
+                        <img src="win.png" alt="Cliente 6">
+                    </div>
+                    <div class="client-logo">
+                        <img src="nueva.png" alt="Cliente 7">
                     </div>
                 </div>
             </div>
