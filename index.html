@@ -30,6 +30,93 @@ body {
     overflow-x:hidden;
 }
 
+/* PANTALLA DE BIENVENIDA */
+#splash-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.8s ease, visibility 0.8s;
+}
+
+.splash-content {
+    text-align: center;
+    animation: fadeIn 1s ease-out;
+}
+
+/* LOGO COMPLETAMENTE LIMPIO - SIN NINGÚN MARCO */
+.splash-logo {
+    height: 280px; /* Aumentado de 180px a 280px */
+    width: auto;
+    max-width: 650px; /* Aumentado de 500px a 650px */
+    margin-bottom: 40px; /* Aumentado para más espacio */
+    animation: pulse 2s infinite, float 3s ease-in-out infinite;
+    filter: drop-shadow(0 0 25px rgba(182, 23, 225, 0.6));
+    /* ELIMINADO COMPLETAMENTE CUALQUIER MARCO, FONDO O BORDE */
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.splash-text {
+    font-size: 3rem; /* Aumentado de 2.5rem a 3rem */
+    background: linear-gradient(135deg, var(--secondary), var(--accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-weight: 700;
+    letter-spacing: 3px; /* Aumentado para más impacto */
+    animation: textGlow 2s ease-in-out infinite alternate;
+    text-transform: uppercase;
+    margin-top: 20px;
+}
+
+/* Animaciones para la pantalla de bienvenida */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.08); } /* Aumentado ligeramente */
+    100% { transform: scale(1); }
+}
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); } /* Aumentado el movimiento */
+    100% { transform: translateY(0px); }
+}
+
+@keyframes textGlow {
+    from { 
+        text-shadow: 0 0 10px rgba(182, 23, 225, 0.5), 
+                     0 0 20px rgba(182, 23, 225, 0.3); 
+    }
+    to { 
+        text-shadow: 0 0 20px rgba(60, 191, 242, 0.8), 
+                     0 0 30px rgba(60, 191, 242, 0.5),
+                     0 0 40px rgba(60, 191, 242, 0.3); 
+    }
+}
+
+/* Cuando la pantalla de bienvenida se oculta */
+#splash-screen.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
 .container { width:90%; max-width:1200px; margin:0 auto; padding:0 20px; }
 
 header {
@@ -40,7 +127,14 @@ header {
     z-index:1000;
     border-bottom:1px solid var(--border);
     padding:14px 0;
+    transform: translateY(-100%);
+    transition: transform 0.8s ease;
 }
+
+header.visible {
+    transform: translateY(0);
+}
+
 .navbar { display:flex; align-items:center; justify-content:space-between; gap:20px; }
 .logo { display:flex; align-items:center; gap:12px; overflow:visible; }
 .logogandi {
@@ -56,6 +150,12 @@ header {
     /* animación ajustada para que no se salga de la pantalla */
     animation: logoBounceGlow 1.2s cubic-bezier(.28,.84,.42,1) infinite;
     will-change: transform, filter;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.logogandi.visible {
+    opacity: 1;
 }
 
 /* Animación ajustada: menor desplazamiento y escala para evitar salir del área visible */
@@ -89,7 +189,8 @@ header {
 .nav-links a:hover { color:var(--accent); }
 .btn-login { background: linear-gradient(135deg, rgba(182,23,225,0.95), rgba(208,74,247,0.85)); color:white; padding:10px 18px; border-radius:20px; text-decoration:none; font-weight:600; }
 
-.hero { padding:110px 0 80px; position:relative; }
+.hero { padding:110px 0 80px; position:relative; opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s ease; }
+.hero.visible { opacity: 1; transform: translateY(0); }
 .hero .tagline { color:var(--secondary); font-weight:300; letter-spacing:1px; margin-bottom:18px; }
 .btn { display:inline-flex; align-items:center; gap:10px; padding:12px 22px; border-radius:999px; background:linear-gradient(135deg, rgba(182,23,225,0.9), rgba(60,191,242,0.85)); color:#fff; border:none; cursor:pointer; font-weight:600; }
 
@@ -197,6 +298,13 @@ header {
     .hero-graphic {
         animation: floatImage 8s ease-in-out infinite;
     }
+    .splash-logo {
+        height: 200px; /* Ajustado para móviles */
+        max-width: 450px;
+    }
+    .splash-text {
+        font-size: 2.2rem;
+    }
 }
 
 @media (max-width: 480px) {
@@ -207,6 +315,13 @@ header {
     }
     .hero-graphic { 
         animation: floatImage 10s ease-in-out infinite;
+    }
+    .splash-logo {
+        height: 160px; /* Ajustado para móviles pequeños */
+        max-width: 350px;
+    }
+    .splash-text {
+        font-size: 1.8rem;
     }
 }
 
@@ -258,6 +373,96 @@ header {
 .ceo-name { font-size:1.3rem; color:var(--accent); font-weight:700; margin-bottom:6px; }
 .ceo-role { color:var(--secondary); margin-bottom:12px; font-weight:600; }
 .ceo-bio { color:var(--text-muted); line-height:1.6; }
+
+/* CARRUSEL DE LOGOS DE EMPRESAS CLIENTE */
+.clients-section {
+    padding: 80px 0;
+    background: var(--primary-dark);
+    overflow: hidden;
+}
+
+.clients-title {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.clients-title h2 {
+    font-size: 2.2rem;
+    margin-bottom: 12px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.92), var(--accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.clients-title p {
+    color: var(--text-muted);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.clients-carousel {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    padding: 20px 0;
+}
+
+.clients-track {
+    display: flex;
+    animation: scroll 30s linear infinite;
+    width: calc(200px * 14); /* Número de logos * ancho de cada logo */
+}
+
+.client-logo {
+    flex: 0 0 auto;
+    width: 180px;
+    height: 100px;
+    margin: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+    padding: 15px;
+}
+
+.client-logo:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.06);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.client-logo img {
+    max-width: 100%;
+    max-height: 70px;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+
+.client-logo:hover img {
+    opacity: 1;
+    filter: brightness(0) invert(1) drop-shadow(0 0 5px rgba(182, 23, 225, 0.5));
+}
+
+/* Animación del carrusel */
+@keyframes scroll {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(calc(-200px * 7)); /* Mitad del ancho total */
+    }
+}
+
+/* Pausar animación al hacer hover */
+.clients-carousel:hover .clients-track {
+    animation-play-state: paused;
+}
 
 /* WhatsApp flotante - MEJORADO */
 .whatsapp-btn {
@@ -332,6 +537,16 @@ header {
     .whatsapp-btn:hover {
         transform: translateY(-4px) scale(1.02);
     }
+    
+    .client-logo {
+        width: 140px;
+        height: 80px;
+        margin: 0 15px;
+    }
+    
+    .clients-track {
+        animation: scroll 20s linear infinite;
+    }
 }
 
 /* Para pantallas muy pequeñas */
@@ -346,6 +561,16 @@ header {
         width: 28px;
         height: 28px;
     }
+    
+    .client-logo {
+        width: 120px;
+        height: 70px;
+        margin: 0 10px;
+    }
+    
+    .clients-track {
+        animation: scroll 15s linear infinite;
+    }
 }
 
 @media (max-width: 992px) {
@@ -358,6 +583,14 @@ header {
     </style>
 </head>
 <body>
+    <!-- Pantalla de Bienvenida -->
+    <div id="splash-screen">
+        <div class="splash-content">
+            <img src="logo.png" class="splash-logo" alt="GandDI">
+            <h1 class="splash-text">Bienvenidos</h1>
+        </div>
+    </div>
+
     <!-- Header -->
     <header>
         <div class="container">
@@ -410,7 +643,7 @@ header {
         <div class="container">
             <div class="section-title">
                 <h2>Nuestros Servicios</h2>
-                <p>Soluciones de analytics e inteligencia de datos diseñadas específicamente para el sector salud</p>
+                <p>Contamos con todo el conocimiento en normatividad del sector de salud y entregamos la imformacion de su ips a tiempo con sus respectivos reportes</p>
             </div>
 
             <div class="services-grid">
@@ -423,8 +656,8 @@ header {
                             <rect x="15" y="3" width="3" height="18" rx="0.6"></rect>
                         </svg>
                     </div>
-                    <h3>Analytics Avanzado</h3>
-                    <p>Implementamos sistemas que transforman datos crudos en insights accionables: modelos ML, pipelines robustos y validación estadística.</p>
+                   <h3>Radicacion de Rips con la nueva normativodad Json</h3>
+                    <p>Implementamos nuestros conocimientos para una mejor calidad de datos en las radicaciones y dar una mejor estadisticas en que estamos fallando y en que no.</p>
                 </div>
 
                 <!-- Business Intelligence -->
@@ -437,8 +670,8 @@ header {
                             <rect x="3" y="13" width="8" height="6" rx="1"></rect>
                         </svg>
                     </div>
-                    <h3>Business Intelligence</h3>
-                    <p>Dashboards interactivos y reportes automatizados para visibilidad operativa y toma de decisiones basada en datos.</p>
+                    <h3>Radicacion de la resolucion 202 del 2021</h3>
+                    <p>Contamos con un equipo especializado en correcion de errores y con gran conocimiento sobre cada parametro sobre la resolucion y capaces de resolver errores en las 118 variables de la misma</p>
                 </div>
 
                 <!-- Data Visualization -->
@@ -544,6 +777,65 @@ header {
         </div>
     </section>
 
+    <!-- CARRUSEL DE EMPRESAS CLIENTE -->
+    <section class="clients-section" id="clientes">
+        <div class="container">
+            <div class="clients-title">
+                <h2>Nuestros Clientes</h2>
+                <p>Empresas que confían en nuestras soluciones de inteligencia de datos</p>
+            </div>
+            
+            <div class="clients-carousel">
+                <div class="clients-track">
+                    <!-- Logos de empresas - puedes reemplazar estas imágenes con las de tus clientes -->
+                    <div class="client-logo">
+                        <img src="https://via.placeholder.com/150x80/000c30/ffffff?text=Cliente+1" alt="Cliente 1">
+                    </div>
+                    <div class="client-logo">
+                        <img src="https://via.placeholder.com/150x80/000c30/ffffff?text=Cliente+2" alt="Cliente 2">
+                    </div>
+                    <div class="client-logo">
+                        <img src="https://via.placeholder.com/150x80/000c30/ffffff?text=Cliente+3" alt="Cliente 3">
+                    </div>
+                    <div class="client-logo">
+                        <img src="https://via.placeholder.com/150x80/000c30/ffffff?text=Cliente+4" alt="Cliente 4">
+                    </div>
+                    <div class="client-logo">
+                        <img src="https://via.placeholder.com/150x80/000c30/ffffff?text=Cliente+5" alt="Cliente 5">
+                    </div>
+                    <div class="client-logo">
+                        <img src="https://via.placeholder.com/150x80/000c30/ffffff?text=Cliente+6" alt="Cliente 6">
+                    </div>
+                    <div class="client-logo">
+                        <img src="https://via.placeholder.com/150x80/000c30/ffffff?text=Cliente+7" alt="Cliente 7">
+                    </div>
+                    <!-- Duplicamos los logos para crear un efecto de carrusel infinito -->
+                    <div class="client-logo">
+                        <img src="https://via.placeholder.com/150x80/000c30/ffffff?text=Cliente+1" alt="Cliente 1">
+                    </div>
+                    <div class="client-logo">
+                        <img src="https://via.placeholder.com/150x80/000c30/ffffff?text=Cliente+2" alt="Cliente 2">
+                    </div>
+                    <div class="client-logo">
+                        <img src="https://via.placeholder.com/150x80/000c30/ffffff?text=Cliente+3" alt="Cliente 3">
+                    </div>
+                    <div class="client-logo">
+                        <img src="https://via.placeholder.com/150x80/000c30/ffffff?text=Cliente+4" alt="Cliente 4">
+                    </div>
+                    <div class="client-logo">
+                        <img src="https://via.placeholder.com/150x80/000c30/ffffff?text=Cliente+5" alt="Cliente 5">
+                    </div>
+                    <div class="client-logo">
+                        <img src="https://via.placeholder.com/150x80/000c30/ffffff?text=Cliente+6" alt="Cliente 6">
+                    </div>
+                    <div class="client-logo">
+                        <img src="https://via.placeholder.com/150x80/000c30/ffffff?text=Cliente+7" alt="Cliente 7">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Contact form -->
     <section class="contact-section" id="form-contacto" style="padding:80px 0;background:var(--primary-dark);">
         <div class="container">
@@ -604,6 +896,35 @@ header {
 
     <!-- Scripts -->
     <script>
+    // Pantalla de bienvenida
+    document.addEventListener('DOMContentLoaded', function() {
+        const splashScreen = document.getElementById('splash-screen');
+        const header = document.querySelector('header');
+        const headerLogo = document.querySelector('.logogandi');
+        const heroSection = document.querySelector('.hero');
+        
+        // Esperar 2 segundos antes de iniciar la transición
+        setTimeout(() => {
+            // Ocultar la pantalla de bienvenida
+            splashScreen.classList.add('hidden');
+            
+            // Mostrar el header con animación
+            setTimeout(() => {
+                header.classList.add('visible');
+                
+                // Mostrar el logo en el header con animación
+                setTimeout(() => {
+                    headerLogo.classList.add('visible');
+                    
+                    // Mostrar la sección hero
+                    setTimeout(() => {
+                        heroSection.classList.add('visible');
+                    }, 300);
+                }, 400);
+            }, 500);
+        }, 2000);
+    });
+
     // WhatsApp funcional
     (function(){
         const phone = '573164939946';
