@@ -126,36 +126,90 @@ header {
 .service-card p { color:var(--text-muted); line-height:1.6; font-size:0.99rem; }
 
 .file-table th { background: rgba(255,255,255,0.04); color:var(--accent); }
+
+/* MEJORAS PARA LA IMAGEN PRINCIPAL */
 .hero-graphic-wrap {
-    /* tamaño mayor y responsivo: se expande hasta 420px y reduce en pantallas pequeñas */
-    width: clamp(220px, 44vw, 420px);
-    /* mantener proporción cómoda (16:9) */
+    /* Tamaño aumentado significativamente para PC */
+    width: clamp(320px, 55vw, 650px);
     aspect-ratio: 16 / 9;
-    height: auto; /* gestionado por aspect-ratio */
-    margin:0 auto;
-    background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));
-    border-radius:12px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    overflow:hidden;
-    padding:12px; /* espacio interior para que la imagen no toque bordes */
-}
-.hero-graphic {
-    /* ahora ocupa la mayor parte del contenedor de forma responsiva */
-    width: clamp(260px, 286%, 380px);
-    max-width:100%;
-    height:auto;
-    object-fit:contain;
-    display:block;
-    border-radius:8px;
+    height: auto;
+    margin: 0 auto;
+    background: linear-gradient(135deg, rgba(182,23,225,0.08), rgba(60,191,242,0.05));
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 20px;
+    position: relative;
+    border: 1px solid rgba(182,23,225,0.1);
+    box-shadow: 0 10px 30px rgba(2,6,23,0.6);
+    animation: containerGlow 4s ease-in-out infinite alternate;
 }
 
-/* Ajustes específicos para móviles (opcional) */
-@media (max-width: 480px) {
-    .hero-graphic-wrap { width: clamp(180px, 80vw, 260px); aspect-ratio: 4 / 3; padding:10px; }
-    .hero-graphic { width: clamp(140px, 90%, 220px); }
+/* Animación de resplandor para el contenedor */
+@keyframes containerGlow {
+    0% {
+        box-shadow: 0 10px 30px rgba(2,6,23,0.6);
+        border-color: rgba(182,23,225,0.1);
+    }
+    100% {
+        box-shadow: 0 10px 40px rgba(182,23,225,0.2);
+        border-color: rgba(60,191,242,0.2);
+    }
 }
+
+.hero-graphic {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    border-radius: 12px;
+    transition: transform 0.5s ease, filter 0.5s ease;
+    animation: floatImage 6s ease-in-out infinite;
+    filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));
+}
+
+/* Animación de flotado para la imagen */
+@keyframes floatImage {
+    0% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+.hero-graphic:hover {
+    transform: scale(1.02);
+    filter: drop-shadow(0 8px 25px rgba(182,23,225,0.3)) brightness(1.05);
+}
+
+/* Ajustes específicos para móviles */
+@media (max-width: 768px) {
+    .hero-graphic-wrap {
+        width: clamp(280px, 85vw, 500px);
+        padding: 15px;
+    }
+    .hero-graphic {
+        animation: floatImage 8s ease-in-out infinite;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-graphic-wrap { 
+        width: clamp(240px, 90vw, 400px); 
+        aspect-ratio: 4 / 3; 
+        padding: 12px; 
+    }
+    .hero-graphic { 
+        animation: floatImage 10s ease-in-out infinite;
+    }
+}
+
 /* Stats (impacto medible) */
 .stats { padding:80px 0; }
 .stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:20px; }
@@ -333,7 +387,7 @@ header {
                         <h1 style="font-size:2.4rem;margin-bottom:8px;">Inteligencia de Datos para EPS</h1>
                         <div class="tagline">Analytics & Data Intelligence</div>
                         <p style="color:var(--text-muted);margin-top:14px;max-width:680px;">
-                            Transformamos datos complejos en estadisticas accionables para optimizar el trabajo  la gestión en el sector salud.
+                            Transformamos datos complejos en estadísticas accionables para optimizar el trabajo y la gestión en el sector salud.
                         </p>
                         <div style="margin-top:18px;">
                             <a href="#form-contacto" class="btn">Solicitar Demo</a>
