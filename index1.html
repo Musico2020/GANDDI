@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GandDI | Analytics & Data Intelligence</title>
+    <link rel="shortcut icon" href="logo.png" type="image/x-icon">
+    <style>
+:root {
+    --primary: #000c30;
+    --secondary: #b617e1;
+    --accent: #3cbff2;
+    --primary-dark: #000820;
+    --text: #ffffff;
+    --text-muted: #aeb7c6;
+    --card-bg: #051238;
+    --border: #0f2a4d;
+    --glass: rgba(255,255,255,0.03);
+}
+
+/* Reset y tipografía */
+* { margin:0; padding:0; box-sizing:border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+html, body { height:100%; }
+body {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: var(--text);
+    line-height:1.6;
+    min-height:100vh;
+    overflow-x:hidden;
+}
+
+/* SPLASH simple */
+#splash {
+    position:fixed;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background: linear-gradient(135deg, rgba(0,12,48,1), rgba(0,8,32,1));
+    z-index:2200;
+    transition: opacity .45s ease;
+    pointer-events:none;
+}
+#splash.hidden { opacity:0; pointer-events:none; }
+#splashLogo {
+    width: min(72vw, 820px);
+    max-width:920px;
+    height:auto;
+    transform-origin:center center;
+    filter: drop-shadow(0 20px 40px rgba(0,0,0,0.45));
+    display:block;
+}
+
+/* animación breve de entrada del splash */
+@keyframes splashIn {
+    0%   { transform: scale(.9); opacity:0; }
+    60%  { transform: scale(1.08); opacity:1; }
+    100% { transform: scale(1); opacity:1; }
+}
+
+/* Layout */
+.container { width:90%; max-width:1200px; margin:0 auto; padding:0 20px; }
+
+/* Header */
+header {
+    background: rgba(0,12,48,0.88);
+    backdrop-filter: blur(8px);
+    position:fixed;
+    width:100%;
+    z-index:1100;
+    border-bottom:1px solid var(--border);
+    padding:14px 0;
+}
+.navbar { display:flex; align-items:center; justify-content:space-between; gap:20px; }
+.logo { display:flex; align-items:center; gap:12px; overflow:visible; }
+
+/* Logo del header: oculto mientras dure splash */
+.logogandi {
+    height:72px;
+    width:auto;
+    max-width:340px;
+    object-fit:contain;
+    display:block;
+    background:none;
+    border:none;
+    transform-origin: left center;
+    transform: translateY(0) scale(1);
+    transition: opacity .28s ease, transform .28s ease;
+    opacity:0;
+}
+.logogandi.visible { opacity:1; }
+
+/* Rebotar cuando visible */
+@keyframes logoBounce {
+    0%   { transform: translateY(0) scale(1); filter: drop-shadow(0 0 0 rgba(60,191,242,0)); }
+    30%  { transform: translateY(-10px) scale(1.04); filter: drop-shadow(0 10px 22px rgba(60,191,242,0.06)); }
+    55%  { transform: translateY(6px) scale(0.98); filter: drop-shadow(0 6px 14px rgba(60,191,242,0.05)); }
+    100% { transform: translateY(0) scale(1); filter: drop-shadow(0 0 0 rgba(60,191,242,0)); }
+}
+.logogandi.bounce { animation: logoBounce 1.2s cubic-bezier(.28,.84,.42,1) infinite; }
+
+/* Resto estilos (conservados del original, resumidos) */
+.nav-links { display:flex; gap:28px; align-items:center; }
+.nav-links a { color:var(--text); text-decoration:none; font-weight:500; padding:6px 0; transition: color .22s ease; }
+.nav-links a:hover { color:var(--accent); }
+.btn-login { background: linear-gradient(135deg, rgba(182,23,225,0.95), rgba(208,74,247,0.85)); color:white; padding:10px 18px; border-radius:20px; text-decoration:none; font-weight:600; }
+
+.hero { padding:110px 0 80px; position:relative; }
+.hero .tagline { color:var(--secondary); font-weight:300; letter-spacing:1px; margin-bottom:18px; }
+
+.services { padding:100px 0; background: var(--primary-dark); position:relative; }
+.section-title { text-align:center; margin-bottom:56px; }
+.section-title h2 { font-size:2.6rem; margin-bottom:12px; background: linear-gradient(135deg, rgba(255,255,255,0.92), var(--accent)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+.section-title p { color:var(--text-muted); max-width:720px; margin:0 auto; }
+
+/* Responsive */
+@media (max-width: 992px) {
+    .nav-links { display:none; }
+    .logogandi { height:56px; }
+    .services { padding:60px 0; }
+}
+    </style>
+</head>
+<body>
+    <!-- SPLASH (logo grande inicial) -->
+    <div id="splash" aria-hidden="true">
+        <img id="splashLogo" src="logo.png" alt="GandDI">
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <!-- logo del header, oculto hasta que el splash termine -->
+                    <img src="logo.png" class="logogandi" alt="GandDI" id="headerLogo">
+                </div>
+
+                <div class="nav-links">
+                    <a href="#inicio">Inicio</a>
+                    <a href="#servicios">Servicios</a>
+                    <a href="#estadisticas">Estadísticas</a>
+                    <a href="#ceo">Ceo</a>
+                    <a href="#contacto">Contacto</a>
+                </div>
+
+                <a href="login/index.html" class="btn-login">Acceso Clientes</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero" id="inicio">
+            <div class="container" style="padding-top:30px;">
+                <div style="display:flex;align-items:center;gap:28px;flex-wrap:wrap;">
+                    <div style="flex:1;min-width:260px;">
+                        <h1 style="font-size:2.4rem;margin-bottom:8px;">Inteligencia de Datos para EPS</h1>
+                        <div class="tagline">Analytics & Data Intelligence</div>
+                        <p style="color:var(--text-muted);margin-top:14px;max-width:680px;">
+                            Transformamos datos complejos en estadisticas accionables para optimizar la gestión en el sector salud.
+                        </p>
+                        <div style="margin-top:18px;">
+                            <a href="#form-contacto" class="btn" style="display:inline-flex;align-items:center;gap:10px;padding:12px 22px;border-radius:999px;background:linear-gradient(135deg, rgba(182,23,225,0.9), rgba(60,191,242,0.85));color:#fff;border:none;cursor:pointer;font-weight:600;">Solicitar Demo</a>
+                        </div>
+                    </div>
+                    <div style="flex:1;min-width:260px;text-align:center;">
+                        <div style="width:260px;height:160px;margin:0 auto;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));border-radius:12px;display:flex;align-items:center;justify-content:center;">
+                            <svg width="120" height="86" viewBox="0 0 120 86" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="2" y="18" width="22" height="66" rx="3" stroke="rgba(255,255,255,0.06)"/>
+                                <rect x="30" y="6" width="22" height="78" rx="3" stroke="rgba(255,255,255,0.06)"/>
+                                <rect x="58" y="28" width="22" height="56" rx="3" stroke="rgba(255,255,255,0.06)"/>
+                                <rect x="86" y="14" width="22" height="70" rx="3" stroke="rgba(255,255,255,0.06)"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- (resto del contenido puede mantenerse igual que antes) -->
+    </main>
+
+    <!-- Scripts -->
+    <script>
+    (function(){
+        const splash = document.getElementById('splash');
+        const splashLogo = document.getElementById('splashLogo');
+        const headerLogo = document.getElementById('headerLogo');
+
+        if (!splash || !splashLogo) return;
+
+        // iniciar animación corta del splash cuando cargue DOM y asset
+        function startSplash() {
+            splashLogo.style.animation = 'splashIn .9s cubic-bezier(.2,.9,.3,1) both';
+
+            // después de la animación corta, ocultar splash y mostrar header
+            const WAIT_MS = 900 + 80; // animación + pequeño buffer
+            setTimeout(() => {
+                // mostrar logo en header y activar rebote
+                if (headerLogo) {
+                    headerLogo.classList.add('visible', 'bounce');
+                }
+                // ocultar splash con transición y eliminar después
+                splash.classList.add('hidden');
+                setTimeout(() => { try { splash.remove(); } catch(e){} }, 520);
+            }, WAIT_MS);
+        }
+
+        if (splashLogo.complete) {
+            startSplash();
+        } else {
+            splashLogo.addEventListener('load', startSplash, { once:true });
+            // por si la imagen falla en cargar rápido, iniciar igual tras timeout
+            setTimeout(() => {
+                if (document.body.contains(splash)) startSplash();
+            }, 1500);
+        }
+    })();
+    </script>
+</body>
+</html>
+```// filepath: c:\xampp\htdocs\final\index.html
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GandDI | Analytics & Data Intelligence</title>
+    <link rel="shortcut icon" href="logo.png" type="image/x-icon">
+    <style>
+:root {
+    --primary: #000c30;
+    --secondary: #b617e1;
+    --accent: #3cbff2;
+    --primary-dark: #000820;
+    --text: #ffffff;
+    --text-muted: #aeb7c6;
+    --card-bg: #051238;
+    --border: #0f2a4d;
+    --glass: rgba(255,255,255,0.03);
+}
+
+/* Reset y tipografía */
+* { margin:0; padding:0; box-sizing:border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+html, body { height:100%; }
+body {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: var(--text);
+    line-height:1.6;
+    min-height:100vh;
+    overflow-x:hidden;
+}
+
+/* SPLASH simple */
+#splash {
+    position:fixed;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background: linear-gradient(135deg, rgba(0,12,48,1), rgba(0,8,32,1));
+    z-index:2200;
+    transition: opacity .45s ease;
+    pointer-events:none;
+}
+#splash.hidden { opacity:0; pointer-events:none; }
+#splashLogo {
+    width: min(72vw, 820px);
+    max-width:920px;
+    height:auto;
+    transform-origin:center center;
+    filter: drop-shadow(0 20px 40px rgba(0,0,0,0.45));
+    display:block;
+}
+
+/* animación breve de entrada del splash */
+@keyframes splashIn {
+    0%   { transform: scale(.9); opacity:0; }
+    60%  { transform: scale(1.08); opacity:1; }
+    100% { transform: scale(1); opacity:1; }
+}
+
+/* Layout */
+.container { width:90%; max-width:1200px; margin:0 auto; padding:0 20px; }
+
+/* Header */
+header {
+    background: rgba(0,12,48,0.88);
+    backdrop-filter: blur(8px);
+    position:fixed;
+    width:100%;
+    z-index:1100;
+    border-bottom:1px solid var(--border);
+    padding:14px 0;
+}
+.navbar { display:flex; align-items:center; justify-content:space-between; gap:20px; }
+.logo { display:flex; align-items:center; gap:12px; overflow:visible; }
+
+/* Logo del header: oculto mientras dure splash */
+.logogandi {
+    height:72px;
+    width:auto;
+    max-width:340px;
+    object-fit:contain;
+    display:block;
+    background:none;
+    border:none;
+    transform-origin: left center;
+    transform: translateY(0) scale(1);
+    transition: opacity .28s ease, transform .28s ease;
+    opacity:0;
+}
+.logogandi.visible { opacity:1; }
+
+/* Rebotar cuando visible */
+@keyframes logoBounce {
+    0%   { transform: translateY(0) scale(1); filter: drop-shadow(0 0 0 rgba(60,191,242,0)); }
+    30%  { transform: translateY(-10px) scale(1.04); filter: drop-shadow(0 10px 22px rgba(60,191,242,0.06)); }
+    55%  { transform: translateY(6px) scale(0.98); filter: drop-shadow(0 6px 14px rgba(60,191,242,0.05)); }
+    100% { transform: translateY(0) scale(1); filter: drop-shadow(0 0 0 rgba(60,191,242,0)); }
+}
+.logogandi.bounce { animation: logoBounce 1.2s cubic-bezier(.28,.84,.42,1) infinite; }
+
+/* Resto estilos (conservados del original, resumidos) */
+.nav-links { display:flex; gap:28px; align-items:center; }
+.nav-links a { color:var(--text); text-decoration:none; font-weight:500; padding:6px 0; transition: color .22s ease; }
+.nav-links a:hover { color:var(--accent); }
+.btn-login { background: linear-gradient(135deg, rgba(182,23,225,0.95), rgba(208,74,247,0.85)); color:white; padding:10px 18px; border-radius:20px; text-decoration:none; font-weight:600; }
+
+.hero { padding:110px 0 80px; position:relative; }
+.hero .tagline { color:var(--secondary); font-weight:300; letter-spacing:1px; margin-bottom:18px; }
+
+.services { padding:100px 0; background: var(--primary-dark); position:relative; }
+.section-title { text-align:center; margin-bottom:56px; }
+.section-title h2 { font-size:2.6rem; margin-bottom:12px; background: linear-gradient(135deg, rgba(255,255,255,0.92), var(--accent)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+.section-title p { color:var(--text-muted); max-width:720px; margin:0 auto; }
+
+/* Responsive */
+@media (max-width: 992px) {
+    .nav-links { display:none; }
+    .logogandi { height:56px; }
+    .services { padding:60px 0; }
+}
+    </style>
+</head>
+<body>
+    <!-- SPLASH (logo grande inicial) -->
+    <div id="splash" aria-hidden="true">
+        <img id="splashLogo" src="logo.png" alt="GandDI">
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <!-- logo del header, oculto hasta que el splash termine -->
+                    <img src="logo.png" class="logogandi" alt="GandDI" id="headerLogo">
+                </div>
+
+                <div class="nav-links">
+                    <a href="#inicio">Inicio</a>
+                    <a href="#servicios">Servicios</a>
+                    <a href="#estadisticas">Estadísticas</a>
+                    <a href="#ceo">Ceo</a>
+                    <a href="#contacto">Contacto</a>
+                </div>
+
+                <a href="login/index.html" class="btn-login">Acceso Clientes</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero" id="inicio">
+            <div class="container" style="padding-top:30px;">
+                <div style="display:flex;align-items:center;gap:28px;flex-wrap:wrap;">
+                    <div style="flex:1;min-width:260px;">
+                        <h1 style="font-size:2.4rem;margin-bottom:8px;">Inteligencia de Datos para EPS</h1>
+                        <div class="tagline">Analytics & Data Intelligence</div>
+                        <p style="color:var(--text-muted);margin-top:14px;max-width:680px;">
+                            Transformamos datos complejos en estadisticas accionables para optimizar la gestión en el sector salud.
+                        </p>
+                        <div style="margin-top:18px;">
+                            <a href="#form-contacto" class="btn" style="display:inline-flex;align-items:center;gap:10px;padding:12px 22px;border-radius:999px;background:linear-gradient(135deg, rgba(182,23,225,0.9), rgba(60,191,242,0.85));color:#fff;border:none;cursor:pointer;font-weight:600;">Solicitar Demo</a>
+                        </div>
+                    </div>
+                    <div style="flex:1;min-width:260px;text-align:center;">
+                        <div style="width:260px;height:160px;margin:0 auto;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));border-radius:12px;display:flex;align-items:center;justify-content:center;">
+                            <svg width="120" height="86" viewBox="0 0 120 86" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="2" y="18" width="22" height="66" rx="3" stroke="rgba(255,255,255,0.06)"/>
+                                <rect x="30" y="6" width="22" height="78" rx="3" stroke="rgba(255,255,255,0.06)"/>
+                                <rect x="58" y="28" width="22" height="56" rx="3" stroke="rgba(255,255,255,0.06)"/>
+                                <rect x="86" y="14" width="22" height="70" rx="3" stroke="rgba(255,255,255,0.06)"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- (resto del contenido puede mantenerse igual que antes) -->
+    </main>
+
+    <!-- Scripts -->
+    <script>
+    (function(){
+        const splash = document.getElementById('splash');
+        const splashLogo = document.getElementById('splashLogo');
+        const headerLogo = document.getElementById('headerLogo');
+
+        if (!splash || !splashLogo) return;
+
+        // iniciar animación corta del splash cuando cargue DOM y asset
+        function startSplash() {
+            splashLogo.style.animation = 'splashIn .9s cubic-bezier(.2,.9,.3,1) both';
+
+            // después de la animación corta, ocultar splash y mostrar header
+            const WAIT_MS = 900 + 80; // animación + pequeño buffer
+            setTimeout(() => {
+                // mostrar logo en header y activar rebote
+                if (headerLogo) {
+                    headerLogo.classList.add('visible', 'bounce');
+                }
+                // ocultar splash con transición y eliminar después
+                splash.classList.add('hidden');
+                setTimeout(() => { try { splash.remove(); } catch(e){} }, 520);
+            }, WAIT_MS);
+        }
+
+        if (splashLogo.complete) {
+            startSplash();
+        } else {
+            splashLogo.addEventListener('load', startSplash, { once:true });
+            // por si la imagen falla en cargar rápido, iniciar igual tras timeout
+            setTimeout(() => {
+                if (document.body.contains(splash)) startSplash();
+            }, 1500);
+        }
+    })();
+    </script>
+</body>
+</html>

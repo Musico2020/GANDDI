@@ -1,0 +1,15 @@
+ganddi-project/
+│
+├── index.html (Página Web Principal)
+│
+├── login/
+│   ├── index.html
+│   └── css/
+│       └── style.css
+│
+└── dashboard/
+    ├── index.html
+    ├── css/
+    │   └── style.css
+    └── js/
+        └── script.js
