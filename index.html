@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GandDI</title>
     <link href="logo.png" type="image/x-icon" rel="shortcut icon">
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
 :root {
        --primary: #000c30;
@@ -192,7 +193,9 @@ header.visible {
 .hero { padding:110px 0 80px; position:relative; opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s ease; }
 .hero.visible { opacity: 1; transform: translateY(0); }
 .hero .tagline { color:var(--secondary); font-weight:300; letter-spacing:1px; margin-bottom:18px; }
-.btn { display:inline-flex; align-items:center; gap:10px; padding:12px 22px; border-radius:999px; background:linear-gradient(135deg, rgba(182,23,225,0.9), rgba(60,191,242,0.85)); color:#fff; border:none; cursor:pointer; font-weight:600; }
+.btn { display:inline-flex; align-items:center; gap:10px; padding:12px 22px; border-radius:999px; background:linear-gradient(135deg, rgba(182,23,225,0.9), rgba(60,191,242,0.85)); color:#fff; border:none; cursor:pointer; font-weight:600; transition: all 0.3s ease; }
+.btn:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(182,23,225,0.4); }
+.btn:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
 
 .services { padding:100px 0; background: var(--primary-dark); position:relative; }
 .section-title { text-align:center; margin-bottom:56px; }
@@ -217,11 +220,23 @@ header.visible {
 .service-card:hover { transform: translateY(-8px); box-shadow: 0 18px 45px rgba(2,6,23,0.55); border-color: rgba(182,23,225,0.12); }
 
 .service-icon {
-    width:64px; height:64px; display:flex; align-items:center; justify-content:center; margin-bottom:18px;
-    border-radius:12px; background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.02));
-    color:var(--accent); flex-shrink:0;
+    width:80px; 
+    height:80px; 
+    display:flex; 
+    align-items:center; 
+    justify-content:center; 
+    margin-bottom:18px;
+    border-radius:16px; 
+    background: linear-gradient(135deg, rgba(182,23,225,0.1), rgba(60,191,242,0.08));
+    color:var(--accent); 
+    flex-shrink:0;
+    transition: all 0.3s ease;
 }
-.service-icon svg { width:36px; height:36px; display:block; fill:none; stroke:currentColor; stroke-width:1.6; opacity:0.95; }
+.service-card:hover .service-icon {
+    transform: scale(1.05);
+    background: linear-gradient(135deg, rgba(182,23,225,0.15), rgba(60,191,242,0.12));
+}
+.service-icon svg { width:42px; height:42px; display:block; fill:none; stroke:currentColor; stroke-width:1.8; opacity:0.95; }
 
 .service-card h3 { font-size:1.2rem; margin-bottom:12px; color:var(--text); }
 .service-card p { color:var(--text-muted); line-height:1.6; font-size:0.99rem; }
@@ -582,6 +597,236 @@ header.visible {
     .ceo-card { padding:18px; gap:12px; }
     .ceo-photo { width:180px; height:180px; }
 }
+
+/* NUEVA SECCIÓN "NUESTRO TRABAJO" - MODIFICADA */
+.our-work-section {
+    padding: 80px 0;
+    background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));
+}
+
+.work-content {
+    max-width: 1000px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.work-text h2 {
+    font-size: 2.2rem;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.92), var(--accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.work-text p {
+    color: var(--text-muted);
+    line-height: 1.7;
+    margin-bottom: 15px;
+    font-size: 1.05rem;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@media (max-width: 768px) {
+    .work-text h2 {
+        font-size: 1.8rem;
+    }
+}
+
+/* NUEVO DISEÑO PARA SERVICIOS ESPECÍFICOS */
+.service-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.service-list li {
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    padding-left: 20px;
+    position: relative;
+    line-height: 1.5;
+}
+
+.service-list li:before {
+    content: "•";
+    color: var(--secondary);
+    position: absolute;
+    left: 0;
+}
+
+/* SERVICIOS CON DISEÑO ESPECIAL - Nota Técnica y Resultados */
+.services-grid-special {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+    margin-top: 28px;
+}
+
+.services-grid-special .service-card {
+    grid-column: span 1;
+}
+
+@media (max-width: 768px) {
+    .services-grid-special {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* MEJORAS PARA EL FORMULARIO DE CONTACTO */
+.contact-form {
+    max-width:600px;
+    margin:0 auto;
+    background:var(--card-bg);
+    padding:30px;
+    border-radius:12px;
+    border:1px solid rgba(255,255,255,0.02);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-row {
+    display: flex;
+    gap: 15px;
+}
+
+.form-row .form-group {
+    flex: 1;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text);
+    font-weight: 500;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,0.05);
+    color: var(--text);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(60, 191, 242, 0.2);
+    background: rgba(255,255,255,0.08);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+/* MEJORAS ESPECÍFICAS PARA EL SELECTOR DE SERVICIOS */
+.form-group select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233cbff2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+    padding-right: 40px;
+    cursor: pointer;
+}
+
+.form-group select option {
+    background: var(--card-bg);
+    color: var(--text);
+    padding: 12px;
+    border: none;
+}
+
+.form-group select:invalid {
+    color: var(--text-muted);
+}
+
+.form-group select option:first-child {
+    color: var(--text-muted);
+}
+
+.form-group select option:not(:first-child) {
+    color: var(--text);
+}
+
+.form-submit {
+    text-align: center;
+    margin-top: 25px;
+}
+
+.submit-btn {
+    position: relative;
+    overflow: hidden;
+}
+
+.submit-btn .btn-text {
+    transition: all 0.3s ease;
+}
+
+.submit-btn .btn-loading {
+    display: none;
+}
+
+.submit-btn.loading .btn-text {
+    opacity: 0;
+}
+
+.submit-btn.loading .btn-loading {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.loading-spinner {
+    width: 18px;
+    height: 18px;
+    border: 2px solid transparent;
+    border-top: 2px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.form-message {
+    margin-top: 15px;
+    padding: 12px;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.form-message.success {
+    background: rgba(46, 204, 113, 0.1);
+    color: #2ecc71;
+    border: 1px solid rgba(46, 204, 113, 0.3);
+}
+
+.form-message.error {
+    background: rgba(231, 76, 60, 0.1);
+    color: #e74c3c;
+    border: 1px solid rgba(231, 76, 60, 0.3);
+}
     </style>
 </head>
 <body>
@@ -619,10 +864,13 @@ header.visible {
             <div class="container" style="padding-top:30px;">
                 <div style="display:flex;align-items:center;gap:28px;flex-wrap:wrap;">
                     <div style="flex:1;min-width:260px;">
-                        <h1 style="font-size:2.4rem;margin-bottom:8px;">Inteligencia de Datos para EPS</h1>
+                        <h1 style="font-size:2.4rem;margin-bottom:8px;">🩺 Sobre Nosotros</h1>
                         <div class="tagline">Analytics & Data Intelligence</div>
                         <p style="color:var(--text-muted);margin-top:14px;max-width:680px;">
-                            Transformamos datos complejos en estadísticas accionables para optimizar el trabajo y la gestión en el sector salud.
+                            Ganddi es una solución innovadora que utiliza el poder de los datos en salud para transformar la forma en que las entidades del sector salud toman decisiones y gestionan el riesgo en salud.
+                        </p>
+                        <p style="color:var(--text-muted);margin-top:14px;max-width:680px;">
+                            Nuestro propósito es convertir la información en conocimiento útil que impulse la eficiencia, la prevención y la toma de decisiones informadas.
                         </p>
                         <div style="margin-top:18px;">
                             <a href="#form-contacto" class="btn">Solicitar Demo</a>
@@ -640,95 +888,118 @@ header.visible {
             </div>
         </section>
 
-    <!-- Services Section -->
+        <!-- NUEVA SECCIÓN "NUESTRO TRABAJO" - MODIFICADA -->
+        <section class="our-work-section" id="nuestro-trabajo">
+            <div class="container">
+                <div class="work-content">
+                    <div class="work-text">
+                        <h2>💡 Nuestro Trabajo</h2>
+                        <p>En Ganddi estamos revolucionando el sector salud con un enfoque centrado en el análisis inteligente de datos.</p>
+                        <p>A través de herramientas de analítica avanzada, apoyamos a las entidades en la gestión del riesgo, la planificación operativa y la optimización de recursos.</p>
+                        <p>El tratamiento adecuado de los datos permite acceder, depurar y analizar grandes volúmenes de información para obtener una visión clara y estratégica de la realidad institucional.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    <!-- Services Section - ACTUALIZADA -->
     <section class="services" id="servicios">
         <div class="container">
             <div class="section-title">
                 <h2>Nuestros Servicios</h2>
-                <p>Soluciones de analytics e inteligencia de datos diseñadas específicamente para el sector salud</p>
+                <p>Soluciones especializadas en análisis de datos para el sector salud</p>
             </div>
 
+            <!-- Primera fila - Tres servicios -->
             <div class="services-grid">
-                <!-- Analytics Avanzado -->
-                <div class="service-card">
-                    <div class="service-icon" aria-hidden="true" style="color:var(--secondary);">
-                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                            <rect x="3" y="10" width="3" height="11" rx="0.6"></rect>
-                            <rect x="9" y="6" width="3" height="15" rx="0.6"></rect>
-                            <rect x="15" y="3" width="3" height="18" rx="0.6"></rect>
-                        </svg>
-                    </div>
-                    <h3>Analytics Avanzado</h3>
-                    <p>Implementamos sistemas que transforman datos crudos en insights accionables: modelos ML, pipelines robustos y validación estadística.</p>
-                </div>
-
-                <!-- Business Intelligence -->
-                <div class="service-card">
-                    <div class="service-icon" aria-hidden="true" style="color:var(--accent);">
-                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <rect x="3" y="3" width="8" height="8" rx="1"></rect>
-                            <rect x="13" y="3" width="8" height="4" rx="1"></rect>
-                            <rect x="13" y="9" width="8" height="12" rx="1"></rect>
-                            <rect x="3" y="13" width="8" height="6" rx="1"></rect>
-                        </svg>
-                    </div>
-                    <h3>Business Intelligence</h3>
-                    <p>Dashboards interactivos y reportes automatizados para visibilidad operativa y toma de decisiones basada en datos.</p>
-                </div>
-
-                <!-- Data Visualization -->
+                <!-- Análisis de Bases de Datos de Afiliados -->
                 <div class="service-card">
                     <div class="service-icon" aria-hidden="true" style="color:var(--secondary);">
                         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M3 17h18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-                            <path d="M5 13l4-4 3 3 5-6 2 2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z" fill="currentColor"/>
                         </svg>
                     </div>
-                    <h3>Data Visualization</h3>
-                    <p>Visualizaciones que hacen comprensibles datos complejos: gráficos interactivos, heatmaps y vistas geoespaciales.</p>
+                    <h3>🔹 Análisis de Bases de Datos de Afiliados</h3>
+                    <div class="service-list">
+                        <li>Validación de calidad del dato</li>
+                        <li>Cálculo de carga operativa</li>
+                        <li>Cálculo de ingresos EPS</li>
+                        <li>Cálculo de metas, recursos y talento humano requerido (Res. 3280 de 2018)</li>
+                        <li>Estimación de costos (Res. 3280 de 2018)</li>
+                    </div>
                 </div>
 
-                <!-- Procesamiento en Tiempo Real -->
+                <!-- Gestión de Riesgos en Salud -->
                 <div class="service-card">
                     <div class="service-icon" aria-hidden="true" style="color:var(--accent);">
                         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M13 2L3 14h7l-1 8 10-12h-7z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" fill="none"/>
-                            <circle cx="19" cy="5" r="2" fill="currentColor" />
+                            <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z" fill="currentColor"/>
                         </svg>
                     </div>
-                    <h3>Procesamiento en Tiempo Real</h3>
-                    <p>Arquitecturas streaming y baja latencia para detección temprana y respuestas automatizadas.</p>
+                    <h3>🔹 Gestión de Riesgos en Salud</h3>
+                    <div class="service-list">
+                        <li>Validación, ajustes e indicadores (Res. 3280 de 2018)</li>
+                        <li>Monitoreo de contratos EPS (frecuencias de uso y metas)</li>
+                        <li>Validación, ajustes e indicadores (Res. 202)</li>
+                        <li>Identificación de grupos de riesgo</li>
+                        <li>Análisis de costos de atención médica</li>
+                    </div>
                 </div>
 
-                <!-- Data Governance -->
+                <!-- Lupa al Giro -->
                 <div class="service-card">
                     <div class="service-icon" aria-hidden="true" style="color:var(--secondary);">
                         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 2l7 4v5c0 5-3.4 9.7-7 11-3.6-1.3-7-6-7-11V6l7-4z" stroke="currentColor" stroke-width="1.4" fill="none"/>
-                            <path d="M9.5 11.5l1.8 1.8 3.2-3.2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                            <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" fill="currentColor"/>
+                            <path d="M12 10h-2v2H9v-2H7V9h2V7h1v2h2v1z" fill="currentColor"/>
                         </svg>
                     </div>
-                    <h3>Data Governance</h3>
-                    <p>Políticas, controles y cifrado que aseguran integridad, privacidad y cumplimiento normativo de datos sensibles.</p>
+                    <h3>🔹 Lupa al Giro</h3>
+                    <div class="service-list">
+                        <li>Seguimiento de LMA y restituciones EPS</li>
+                        <li>Comparativos entre LMA apropiadas y giros a IPS</li>
+                        <li>Cálculo de giros por base de datos – LMA vs Giros EPS</li>
+                    </div>
                 </div>
+            </div>
 
-                <!-- Predictive Analytics -->
+            <!-- Segunda fila - Dos servicios especiales (Nota Técnica y Resultados) -->
+            <div class="services-grid-special">
+                <!-- Nota Técnica -->
                 <div class="service-card">
                     <div class="service-icon" aria-hidden="true" style="color:var(--accent);">
                         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="12" cy="9.5" r="5" stroke="currentColor" stroke-width="1.4" fill="none"></circle>
-                            <path d="M2 20h20" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
-                            <path d="M8 15c1-1 3-2 4-2s3 1 4 2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" fill="none"/>
+                            <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M8,13V15H16V13H8M8,16V18H13V16H8Z" fill="currentColor"/>
                         </svg>
                     </div>
-                    <h3>Predictive Analytics</h3>
-                    <p>Modelos predictivos robustos que anticipan tendencias y permiten planear recursos y riesgos con mayor precisión.</p>
+                    <h3>🔹 Nota Técnica</h3>
+                    <div class="service-list">
+                        <li>Análisis y proyección de ejecución de servicios y tecnologías</li>
+                        <li>Planeación de recursos financieros</li>
+                        <li>Planeación de recursos operativos (oferta/demanda)</li>
+                        <li>Determinación de cumplimiento o desviaciones en población susceptible, frecuencia de uso y costos para ajustar el riesgo</li>
+                    </div>
+                </div>
+
+                <!-- Resultados -->
+                <div class="service-card">
+                    <div class="service-icon" aria-hidden="true" style="color:var(--secondary);">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <h3>📊 Resultados</h3>
+                    <div class="service-list">
+                        <li>Generación de informes y dashboards personalizados</li>
+                        <li>Análisis de datos de pacientes</li>
+                        <li>Evaluación del impacto de intervenciones en salud</li>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Impacto Medible (STATS) -->
+    <!-- Impacto Medible (STATS) - MEJORADO -->
     <section class="stats" id="estadisticas">
         <div class="container">
             <div class="section-title">
@@ -838,26 +1109,56 @@ header.visible {
         </div>
     </section>
 
-    <!-- Contact form -->
+    <!-- Contact form - MEJORADO -->
     <section class="contact-section" id="form-contacto" style="padding:80px 0;background:var(--primary-dark);">
         <div class="container">
             <div class="section-title">
                 <h2>Contáctanos</h2>
                 <p style="color:var(--text-muted);">¿Tienes dudas o quieres una demo? Escríbenos y te responderemos pronto.</p>
             </div>
-            <form class="contact-form" id="contactForm" style="max-width:600px;margin:0 auto;background:var(--card-bg);padding:26px;border-radius:12px;border:1px solid rgba(255,255,255,0.02);">
-                <div style="display:flex;gap:12px;margin-bottom:12px;">
-                    <input type="text" id="nombre" name="nombre" placeholder="Nombre" required style="flex:1;padding:10px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text);">
-                    <input type="email" id="email" name="email" placeholder="Correo electrónico" required style="flex:1;padding:10px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text);">
+            <form class="contact-form" id="contactForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nombre">Nombre completo</label>
+                        <input type="text" id="nombre" name="nombre" placeholder="Tu nombre completo" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Correo electrónico</label>
+                        <input type="email" id="email" name="email" placeholder="tu.correo@ejemplo.com" required>
+                    </div>
                 </div>
-                <div style="margin-bottom:12px;">
-                    <textarea id="mensaje" name="mensaje" rows="5" placeholder="Escribe tu mensaje..." required style="width:100%;padding:12px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text);"></textarea>
+                <div class="form-group">
+                    <label for="empresa">Empresa (opcional)</label>
+                    <input type="text" id="empresa" name="empresa" placeholder="Nombre de tu empresa">
                 </div>
-                <div style="text-align:center;">
-                    <button type="submit" class="btn">Enviar mensaje</button>
+                <div class="form-group">
+                    <label for="servicio">Servicio de interés</label>
+                    <select id="servicio" name="servicio" required>
+                        <option value="" disabled selected>Selecciona un servicio</option>
+                        <option value="analisis-bases-datos">Análisis de Bases de Datos de Afiliados</option>
+                        <option value="gestion-riesgos">Gestión de Riesgos en Salud</option>
+                        <option value="lupa-giro">Lupa al Giro</option>
+                        <option value="nota-tecnica">Nota Técnica</option>
+                        <option value="resultados">Resultados y Dashboards</option>
+                        <option value="multiple">Múltiples servicios</option>
+                        <option value="otro">Otro</option>
+                    </select>
                 </div>
+                <div class="form-group">
+                    <label for="mensaje">Mensaje</label>
+                    <textarea id="mensaje" name="mensaje" rows="5" placeholder="Cuéntanos cómo podemos ayudarte..." required></textarea>
+                </div>
+                <div class="form-submit">
+                    <button type="submit" class="btn submit-btn" id="submitBtn">
+                        <span class="btn-text">Enviar mensaje</span>
+                        <span class="btn-loading">
+                            <span class="loading-spinner"></span>
+                            Enviando...
+                        </span>
+                    </button>
+                </div>
+                <div id="formMsg" class="form-message"></div>
             </form>
-            <div id="formMsg" style="margin-top:18px;text-align:center;color:var(--text-muted);"></div>
         </div>
     </section>
 
@@ -898,6 +1199,13 @@ header.visible {
 
     <!-- Scripts -->
     <script>
+    // Inicializar EmailJS (debes reemplazar estos valores con los tuyos)
+    (function(){
+        // Inicializar EmailJS con tu Public Key
+        // Obtén tu Public Key en: https://dashboard.emailjs.com/admin/integration
+        emailjs.init("4LJHPgS23SJgS60Dy"); // Reemplaza con tu Public Key
+    })();
+
     // Pantalla de bienvenida
     document.addEventListener('DOMContentLoaded', function() {
         const splashScreen = document.getElementById('splash-screen');
@@ -925,6 +1233,9 @@ header.visible {
                 }, 400);
             }, 500);
         }, 2000);
+
+        // Inicializar contadores después de que la página cargue completamente
+        initCounters();
     });
 
     // WhatsApp funcional
@@ -939,54 +1250,130 @@ header.visible {
         });
     })();
 
-    // Contact form demo
+    // Contact form con EmailJS
     document.getElementById('contactForm')?.addEventListener('submit', function(e){
         e.preventDefault();
-        const msgEl = document.getElementById('formMsg');
-        msgEl.textContent = 'Enviando...';
-        setTimeout(() => {
-            msgEl.textContent = '¡Mensaje enviado! Te contactaremos pronto.';
-            this.reset();
-        }, 900);
+        
+        const submitBtn = document.getElementById('submitBtn');
+        const formMsg = document.getElementById('formMsg');
+        
+        // Mostrar estado de carga
+        submitBtn.classList.add('loading');
+        submitBtn.disabled = true;
+        formMsg.textContent = '';
+        formMsg.className = 'form-message';
+        
+        // Preparar datos del formulario
+        const formData = {
+            nombre: document.getElementById('nombre').value,
+            email: document.getElementById('email').value,
+            empresa: document.getElementById('empresa').value,
+            servicio: document.getElementById('servicio').value,
+            mensaje: document.getElementById('mensaje').value,
+            fecha: new Date().toLocaleString('es-ES')
+        };
+        
+        // Enviar correo usando EmailJS
+        // Reemplaza 'YOUR_SERVICE_ID' y 'YOUR_TEMPLATE_ID' con tus valores reales
+        emailjs.send('service_fwrqok4', 'template_9rwlpbt', formData)
+            .then(function(response) {
+                console.log('SUCCESS!', response.status, response.text);
+                
+                // Mostrar mensaje de éxito
+                formMsg.textContent = '¡Mensaje enviado correctamente! Te contactaremos pronto.';
+                formMsg.classList.add('success');
+                
+                // Resetear formulario
+                document.getElementById('contactForm').reset();
+            }, function(error) {
+                console.log('FAILED...', error);
+                
+                // Mostrar mensaje de error
+                formMsg.textContent = 'Error al enviar el mensaje. Por favor, inténtalo de nuevo o contáctanos directamente por WhatsApp.';
+                formMsg.classList.add('error');
+            })
+            .finally(function() {
+                // Restaurar estado normal del botón
+                submitBtn.classList.remove('loading');
+                submitBtn.disabled = false;
+            });
     });
 
-    // Counter animation: activa cuando .stats entra en viewport (solo una vez)
-    (function(){
+    // CONTADORES MEJORADOS - Funcionalidad completa
+    function initCounters() {
         const statsSection = document.getElementById('estadisticas');
         if (!statsSection) return;
+        
         const counters = statsSection.querySelectorAll('.stat-number');
         let started = false;
 
-        function animateCounter(el, target, duration = 1200) {
+        function animateCounter(el, target, duration = 2000) {
             const start = 0;
             const range = target - start;
-            const startTime = performance.now();
-            function step(now) {
-                const elapsed = now - startTime;
+            const increment = target / (duration / 16); // 60fps
+            let current = start;
+            const startTime = Date.now();
+            
+            function updateCounter() {
+                const elapsed = Date.now() - startTime;
                 const progress = Math.min(elapsed / duration, 1);
-                const value = Math.floor(start + range * easeOutCubic(progress));
-                el.textContent = value + (el.dataset.suffix || '');
-                if (progress < 1) requestAnimationFrame(step);
+                
+                // Usar easing para una animación más suave
+                current = start + range * easeOutQuart(progress);
+                
+                if (progress < 1) {
+                    el.textContent = Math.floor(current);
+                    requestAnimationFrame(updateCounter);
+                } else {
+                    el.textContent = target;
+                }
             }
-            requestAnimationFrame(step);
+            
+            requestAnimationFrame(updateCounter);
         }
-        function easeOutCubic(t){ return 1 - Math.pow(1 - t, 3); }
+        
+        // Función de easing para animación más natural
+        function easeOutQuart(t) {
+            return 1 - Math.pow(1 - t, 4);
+        }
 
-        const io = new IntersectionObserver((entries) => {
+        const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting && !started) {
                     started = true;
-                    counters.forEach(c => {
-                        const target = parseInt(c.getAttribute('data-target') || '0', 10);
-                        animateCounter(c, target, 1200);
-                    });
-                    io.disconnect();
+                    
+                    // Pequeño delay para mejor UX
+                    setTimeout(() => {
+                        counters.forEach(counter => {
+                            const target = parseInt(counter.getAttribute('data-target') || '0', 10);
+                            animateCounter(counter, target, 2000);
+                        });
+                    }, 300);
+                    
+                    observer.disconnect();
                 }
             });
-        }, { threshold: 0.4 });
+        }, { 
+            threshold: 0.3, // Se activa cuando el 30% de la sección es visible
+            rootMargin: '0px 0px -50px 0px' // Se activa un poco antes de que llegue al viewport
+        });
 
-        io.observe(statsSection);
-    })();
+        observer.observe(statsSection);
+    }
+
+    // También activar contadores al hacer scroll manualmente
+    window.addEventListener('scroll', function() {
+        const statsSection = document.getElementById('estadisticas');
+        if (statsSection) {
+            const sectionTop = statsSection.getBoundingClientRect().top;
+            const windowHeight = window.innerHeight;
+            
+            // Si la sección está en el viewport
+            if (sectionTop < windowHeight * 0.8) {
+                initCounters();
+            }
+        }
+    });
     </script>
 </body>
 </html>
