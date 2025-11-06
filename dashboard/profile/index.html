@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil - GandDI | Gestiona - Analiza - Decide</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <div class="logo-main">GandDI</div>
+                    <div class="logo-tagline">Gestiona - Analiza - Decide</div>
+                </div>
+                <div class="nav-links">
+                    <a href="../index.html">Dashboard</a>
+                    <a href="../upload.html" id="uploadLink">Subir Archivo</a>
+                    <a href="../admin.html" id="adminLink">Administración</a>
+                    <a href="index.html" class="active">Perfil</a>
+                    <a href="../../login/index.html">Cerrar Sesión</a>
+                </div>
+                <div class="user-info">
+                    <span id="userRole">EPS Sanitas</span>
+                    <div class="user-avatar">👤</div>
+                </div>
+                <div class="mobile-menu">☰</div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <div class="profile-header">
+            <h1>Mi Perfil</h1>
+            <p>Gestiona tu información personal y preferencias</p>
+        </div>
+
+        <div class="profile-content">
+            <!-- Información del Usuario -->
+            <div class="profile-section">
+                <div class="section-header">
+                    <h2>Información Personal</h2>
+                    <button class="btn btn-secondary" id="editProfileBtn">✏️ Editar Perfil</button>
+                </div>
+                
+                <div class="profile-info-grid">
+                    <div class="profile-avatar-section">
+                        <div class="avatar-container">
+                            <div class="avatar" id="userAvatar">👤</div>
+                            <input type="file" id="avatarUpload" accept="image/*" style="display: none;">
+                            <button class="btn-avatar-upload" onclick="document.getElementById('avatarUpload').click()">
+                                📷 Cambiar Foto
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="profile-details">
+                        <div class="info-group">
+                            <label class="info-label">Nombre Completo</label>
+                            <div class="info-value" id="userFullName">Juan Carlos Pérez Rodríguez</div>
+                            <input type="text" class="info-input" id="userFullNameInput" style="display: none;" value="Juan Carlos Pérez Rodríguez">
+                        </div>
+
+                        <div class="info-group">
+                            <label class="info-label">Correo Electrónico</label>
+                            <div class="info-value" id="userEmail">juan.perez@epssanitas.com</div>
+                            <input type="email" class="info-input" id="userEmailInput" style="display: none;" value="juan.perez@epssanitas.com">
+                        </div>
+
+                        <div class="info-group">
+                            <label class="info-label">EPS</label>
+                            <div class="info-value" id="userEPS">EPS Sanitas</div>
+                        </div>
+
+                        <div class="info-group">
+                            <label class="info-label">Rol</label>
+                            <div class="info-value" id="userRoleInfo">Usuario EPS</div>
+                        </div>
+
+                        <div class="info-group">
+                            <label class="info-label">Fecha de Registro</label>
+                            <div class="info-value" id="userRegistrationDate">15 de Marzo, 2023</div>
+                        </div>
+
+                        <div class="info-group">
+                            <label class="info-label">Último Acceso</label>
+                            <div class="info-value" id="userLastAccess">Hoy, 14:30</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions" id="profileActions" style="display: none;">
+                    <button class="btn btn-outline" id="cancelEditBtn">Cancelar</button>
+                    <button class="btn" id="saveProfileBtn">Guardar Cambios</button>
+                </div>
+            </div>
+
+            <!-- Estadísticas Personales -->
+            <div class="profile-section">
+                <h2>Mis Estadísticas</h2>
+                <div class="personal-stats-grid">
+                    <div class="personal-stat-card">
+                        <div class="personal-stat-icon">📊</div>
+                        <div class="personal-stat-content">
+                            <div class="personal-stat-number" id="totalUploads">24</div>
+                            <div class="personal-stat-label">Archivos Subidos</div>
+                        </div>
+                    </div>
+
+                    <div class="personal-stat-card">
+                        <div class="personal-stat-icon">✅</div>
+                        <div class="personal-stat-content">
+                            <div class="personal-stat-number" id="radicadosCount">18</div>
+                            <div class="personal-stat-label">Radicados</div>
+                        </div>
+                    </div>
+
+                    <div class="personal-stat-card">
+                        <div class="personal-stat-icon">⏳</div>
+                        <div class="personal-stat-content">
+                            <div class="personal-stat-number" id="pendientesCount">6</div>
+                            <div class="personal-stat-label">Pendientes</div>
+                        </div>
+                    </div>
+
+                    <div class="personal-stat-card">
+                        <div class="personal-stat-icon">📈</div>
+                        <div class="personal-stat-content">
+                            <div class="personal-stat-number" id="efficiencyRate">75%</div>
+                            <div class="personal-stat-label">Tasa de Eficiencia</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Configuración de Seguridad -->
+            <div class="profile-section">
+                <h2>Seguridad</h2>
+                <div class="security-settings">
+                    <div class="security-item">
+                        <div class="security-info">
+                            <h4>Contraseña</h4>
+                            <p>Última actualización: Hace 3 meses</p>
+                        </div>
+                        <button class="btn btn-secondary" id="changePasswordBtn">Cambiar Contraseña</button>
+                    </div>
+
+                    <div class="security-item">
+                        <div class="security-info">
+                            <h4>Autenticación de Dos Factores</h4>
+                            <p>Aumenta la seguridad de tu cuenta</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="twoFactorToggle">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="security-item">
+                        <div class="security-info">
+                            <h4>Sesiones Activas</h4>
+                            <p>Gestiona tus sesiones activas</p>
+                        </div>
+                        <button class="btn btn-outline" id="manageSessionsBtn">Gestionar Sesiones</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Preferencias -->
+            <div class="profile-section">
+                <h2>Preferencias</h2>
+                <div class="preferences-grid">
+                    <div class="preference-item">
+                        <label class="preference-label">Notificaciones por Email</label>
+                        <label class="switch">
+                            <input type="checkbox" id="emailNotifications" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="preference-item">
+                        <label class="preference-label">Recordatorios Semanales</label>
+                        <label class="switch">
+                            <input type="checkbox" id="weeklyReminders">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="preference-item">
+                        <label class="preference-label">Tema Oscuro</label>
+                        <label class="switch">
+                            <input type="checkbox" id="darkTheme" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="preference-item">
+                        <label class="preference-label">Idioma</label>
+                        <select class="preference-select" id="languageSelect">
+                            <option value="es">Español</option>
+                            <option value="en">English</option>
+                        </select>
+                    </div>
+
+                    <div class="preference-item">
+                        <label class="preference-label">Zona Horaria</label>
+                        <select class="preference-select" id="timezoneSelect">
+                            <option value="-5">GMT-5 (Bogotá)</option>
+                            <option value="-6">GMT-6</option>
+                            <option value="-4">GMT-4</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Archivos Recientes -->
+            <div class="profile-section">
+                <div class="section-header">
+                    <h2>Mis Archivos Recientes</h2>
+                    <a href="../index.html" class="btn btn-secondary">Ver Todos</a>
+                </div>
+                
+                <div class="recent-files">
+                    <div class="recent-file-card">
+                        <div class="file-icon">📄</div>
+                        <div class="file-info">
+                            <div class="file-name">Reporte_Noviembre_2023.pdf</div>
+                            <div class="file-meta">Subido: Hoy, 10:30 AM • 2.4 MB</div>
+                        </div>
+                        <span class="status-badge status-radicado">Radicado</span>
+                    </div>
+
+                    <div class="recent-file-card">
+                        <div class="file-icon">📊</div>
+                        <div class="file-info">
+                            <div class="file-name">Indicadores_Octubre.xlsx</div>
+                            <div class="file-meta">Subido: Ayer, 15:45 • 1.8 MB</div>
+                        </div>
+                        <span class="status-badge status-pendiente">Pendiente</span>
+                    </div>
+
+                    <div class="recent-file-card">
+                        <div class="file-icon">📈</div>
+                        <div class="file-info">
+                            <div class="file-name">Analisis_Tendencias.pdf</div>
+                            <div class="file-meta">Subido: 20 Nov, 09:15 • 3.1 MB</div>
+                        </div>
+                        <span class="status-badge status-radicado">Radicado</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Acciones Peligrosas -->
+            <div class="profile-section danger-zone">
+                <h2>Zona de Peligro</h2>
+                <div class="danger-actions">
+                    <div class="danger-item">
+                        <div class="danger-info">
+                            <h4>Exportar Mis Datos</h4>
+                            <p>Descarga todos tus datos personales y archivos</p>
+                        </div>
+                        <button class="btn btn-outline" id="exportDataBtn">Exportar Datos</button>
+                    </div>
+
+                    <div class="danger-item">
+                        <div class="danger-info">
+                            <h4>Eliminar Cuenta</h4>
+                            <p>Elimina permanentemente tu cuenta y todos los datos asociados</p>
+                        </div>
+                        <button class="btn btn-danger" id="deleteAccountBtn">Eliminar Cuenta</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Cambio de Contraseña -->
+    <div class="modal" id="passwordModal">
+        <div class="modal-content">
+            <button class="close-modal" id="closePasswordModal">×</button>
+            
+            <div class="modal-header">
+                <h2>Cambiar Contraseña</h2>
+                <p>Actualiza tu contraseña para mantener tu cuenta segura</p>
+            </div>
+
+            <form class="password-form" id="passwordForm">
+                <div class="form-group">
+                    <label for="currentPassword">Contraseña Actual</label>
+                    <div class="input-wrapper">
+                        <input type="password" id="currentPassword" class="form-control" required>
+                        <button type="button" class="password-toggle">👁️</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="newPassword">Nueva Contraseña</label>
+                    <div class="input-wrapper">
+                        <input type="password" id="newPassword" class="form-control" required>
+                        <button type="button" class="password-toggle">👁️</button>
+                    </div>
+                    <div class="password-strength">
+                        <div class="strength-bar">
+                            <div class="strength-fill" id="strengthFill"></div>
+                        </div>
+                        <span class="strength-text" id="strengthText">Seguridad de la contraseña</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmNewPassword">Confirmar Nueva Contraseña</label>
+                    <div class="input-wrapper">
+                        <input type="password" id="confirmNewPassword" class="form-control" required>
+                        <button type="button" class="password-toggle">👁️</button>
+                    </div>
+                </div>
+
+                <div class="password-requirements">
+                    <h4>Requisitos de la contraseña:</h4>
+                    <ul>
+                        <li id="reqLength">Mínimo 8 caracteres</li>
+                        <li id="reqUppercase">Al menos una mayúscula</li>
+                        <li id="reqLowercase">Al menos una minúscula</li>
+                        <li id="reqNumber">Al menos un número</li>
+                        <li id="reqSpecial">Al menos un carácter especial</li>
+                    </ul>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-outline" id="cancelPasswordBtn">Cancelar</button>
+                    <button type="submit" class="btn" id="updatePasswordBtn">Actualizar Contraseña</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Sesiones Activas -->
+    <div class="modal" id="sessionsModal">
+        <div class="modal-content">
+            <button class="close-modal" id="closeSessionsModal">×</button>
+            
+            <div class="modal-header">
+                <h2>Sesiones Activas</h2>
+                <p>Gestiona tus sesiones activas en el sistema</p>
+            </div>
+
+            <div class="sessions-list" id="sessionsList">
+                <!-- Sesiones se cargan dinámicamente -->
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn btn-danger" id="logoutAllBtn">Cerrar Todas las Sesiones</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - GandDI | Gestiona - Analiza - Decide</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Fondo estadístico -->
+    <div class="statistical-background"></div>
+    <div class="chart-elements">
+        <div class="bar-chart">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </div>
+        <div class="pie-chart"></div>
+        <div class="line-graph"></div>
+    </div>
+
+    <!-- Contenedor principal -->
+    <div class="login-container">
+       <div class="login-card">
+    <!-- Header -->
+    <div class="login-header">
+        <!-- Logo arriba del título -->
+        <img src="logo.png" class="logo" style="display:block; margin:0 auto 20px; max-height:220px;">
+        <h1 class="login-title">Acceso al Dashboard</h1>
+    </div>
+
+            <!-- Formulario -->
+            <form class="login-form" id="loginForm">
+                <div class="form-group">
+                    <label for="email">Correo Electrónico</label>
+                    <div class="input-wrapper">
+                        <span class="form-icon">✉️</span>
+                        <input type="email" id="email" class="form-control" placeholder="usuario@empresa.com" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <div class="input-wrapper">
+                        <span class="form-icon">🔒</span>
+                        <input type="password" id="password" class="form-control" placeholder="Ingresa tu contraseña" required>
+                        <button type="button" class="password-toggle" id="togglePassword">👁️</button>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn">
+                    <span>Acceder al Dashboard</span>
+                </button>
+
+                <div class="login-links">
+                    <a id="forgotPasswordLink">¿Olvidaste tu contraseña?</a>
+                    <a href="../index.html">← Volver al sitio principal</a>
+                </div>
+
+                
+            </form>
+
+            <div class="login-footer">
+                <p>Sistema de Gestión de Archivos EPS &copy; 2023</p>
+                <p>Confidencialidad garantizada</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de recuperación de contraseña -->
+    <div class="modal" id="recoveryModal">
+        <div class="modal-content">
+            <button class="close-modal" id="closeModal">×</button>
+            
+            <div class="modal-header">
+                <h2 class="modal-title">Recuperar Contraseña</h2>
+                <p class="modal-subtitle">Sigue estos pasos para restablecer tu acceso</p>
+            </div>
+
+            <!-- Pasos de recuperación -->
+            <div class="recovery-steps">
+                <div class="step active" id="step1">
+                    <div class="step-circle">1</div>
+                    <div class="step-label">Verificar Email</div>
+                </div>
+                <div class="step" id="step2">
+                    <div class="step-circle">2</div>
+                    <div class="step-label">Código de Verificación</div>
+                </div>
+                <div class="step" id="step3">
+                    <div class="step-circle">3</div>
+                    <div class="step-label">Nueva Contraseña</div>
+                </div>
+            </div>
+
+            <!-- Paso 1: Verificar Email -->
+            <div class="recovery-form" id="step1Form">
+                <div class="form-group">
+                    <label for="recoveryEmail">Correo Electrónico</label>
+                    <div class="input-wrapper">
+                        <span class="form-icon">✉️</span>
+                        <input type="email" id="recoveryEmail" class="form-control" placeholder="Ingresa tu correo registrado" required>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-outline" id="cancelRecovery">Cancelar</button>
+                    <button type="button" class="btn" id="sendCode">Enviar Código</button>
+                </div>
+            </div>
+
+            <!-- Paso 2: Código de Verificación -->
+            <div class="recovery-form" id="step2Form" style="display: none;">
+                <div class="form-group">
+                    <label for="verificationCode">Código de Verificación</label>
+                    <div class="input-wrapper">
+                        <span class="form-icon">🔢</span>
+                        <input type="text" id="verificationCode" class="form-control" placeholder="Ingresa el código de 6 dígitos" maxlength="6" required>
+                    </div>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 5px;">
+                        Hemos enviado un código a: <span id="emailPreview"></span>
+                    </p>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-outline" id="backToStep1">Atrás</button>
+                    <button type="button" class="btn" id="verifyCode">Verificar Código</button>
+                </div>
+            </div>
+
+            <!-- Paso 3: Nueva Contraseña -->
+            <div class="recovery-form" id="step3Form" style="display: none;">
+                <div class="form-group">
+                    <label for="newPassword">Nueva Contraseña</label>
+                    <div class="input-wrapper">
+                        <span class="form-icon">🔒</span>
+                        <input type="password" id="newPassword" class="form-control" placeholder="Crea una nueva contraseña" required>
+                        <button type="button" class="password-toggle" id="toggleNewPassword">👁️</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirmar Contraseña</label>
+                    <div class="input-wrapper">
+                        <span class="form-icon">🔒</span>
+                        <input type="password" id="confirmPassword" class="form-control" placeholder="Repite la nueva contraseña" required>
+                        <button type="button" class="password-toggle" id="toggleConfirmPassword">👁️</button>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-outline" id="backToStep2">Atrás</button>
+                    <button type="button" class="btn" id="updatePassword">Actualizar Contraseña</button>
+                </div>
+            </div>
+
+            <!-- Mensaje de éxito -->
+            <div class="success-message" id="successMessage" style="display: none;">
+                <div class="success-icon">✅</div>
+                <h3>¡Contraseña Actualizada!</h3>
+                <p>Tu contraseña ha sido restablecida exitosamente.</p>
+                <button class="btn" id="goToLogin" style="margin-top: 20px;">Ir al Login</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

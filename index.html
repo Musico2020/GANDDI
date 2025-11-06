@@ -1,0 +1,1713 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GandDI</title>
+    <link href="logo.png" type="image/x-icon" rel="shortcut icon">
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <style>
+:root {
+       --primary: #000c30;
+    --secondary: #b617e1;
+    --accent: #3cbff2;
+    --primary-dark: #000820;
+    --text: #ffffff;
+    --text-muted: #aeb7c6;
+    --card-bg: #051238;
+    --border: #0f2a4d;
+    --glass: rgba(255,255,255,0.03);
+    /* Aumentado para un logo más grande por defecto */
+    --logo-scale: 2;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+body {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: var(--text);
+    line-height:1.6;
+    min-height:100vh;
+    overflow-x:hidden;
+}
+
+/* PANTALLA DE BIENVENIDA */
+#splash-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.8s ease, visibility 0.8s;
+}
+
+.splash-content {
+    text-align: center;
+    animation: fadeIn 1s ease-out;
+}
+
+/* LOGO COMPLETAMENTE LIMPIO - SIN NINGÚN MARCO */
+.splash-logo {
+    height: 280px; /* Aumentado de 180px a 280px */
+    width: auto;
+    max-width: 650px; /* Aumentado de 500px a 650px */
+    margin-bottom: 40px; /* Aumentado para más espacio */
+    animation: pulse 2s infinite, float 3s ease-in-out infinite;
+    filter: drop-shadow(0 0 25px rgba(182, 23, 225, 0.6));
+    /* ELIMINADO COMPLETAMENTE CUALQUIER MARCO, FONDO O BORDE */
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.splash-text {
+    font-size: 3rem; /* Aumentado de 2.5rem a 3rem */
+    background: linear-gradient(135deg, var(--secondary), var(--accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-weight: 700;
+    letter-spacing: 3px; /* Aumentado para más impacto */
+    animation: textGlow 2s ease-in-out infinite alternate;
+    text-transform: uppercase;
+    margin-top: 20px;
+}
+
+/* Animaciones para la pantalla de bienvenida */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.08); } /* Aumentado ligeramente */
+    100% { transform: scale(1); }
+}
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); } /* Aumentado el movimiento */
+    100% { transform: translateY(0px); }
+}
+
+@keyframes textGlow {
+    from { 
+        text-shadow: 0 0 10px rgba(182, 23, 225, 0.5), 
+                     0 0 20px rgba(182, 23, 225, 0.3); 
+    }
+    to { 
+        text-shadow: 0 0 20px rgba(60, 191, 242, 0.8), 
+                     0 0 30px rgba(60, 191, 242, 0.5),
+                     0 0 40px rgba(60, 191, 242, 0.3); 
+    }
+}
+
+/* Cuando la pantalla de bienvenida se oculta */
+#splash-screen.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.container { width:90%; max-width:1200px; margin:0 auto; padding:0 20px; }
+
+header {
+    background: rgba(0,12,48,0.88);
+    backdrop-filter: blur(8px);
+    position:fixed;
+    width:100%;
+    z-index:1000;
+    border-bottom:1px solid var(--border);
+    padding:14px 0;
+    transform: translateY(-100%);
+    transition: transform 0.8s ease;
+}
+
+header.visible {
+    transform: translateY(0);
+}
+
+.navbar { display:flex; align-items:center; justify-content:space-between; gap:20px; }
+.logo { display:flex; align-items:center; gap:12px; overflow:visible; }
+.logogandi {
+    height:90px;
+    width:auto;
+    max-width:340px;
+    object-fit:contain;
+    display:block;
+    background:none;
+    border:none;
+    transform-origin: left center;
+    transform: translateY(0) scale(var(--logo-scale));
+    /* animación ajustada para que no se salga de la pantalla */
+    animation: logoBounceGlow 1.2s cubic-bezier(.28,.84,.42,1) infinite;
+    will-change: transform, filter;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.logogandi.visible {
+    opacity: 1;
+}
+
+/* Animación ajustada: menor desplazamiento y escala para evitar salir del área visible */
+@keyframes logoBounceGlow {
+    0% {
+        filter: drop-shadow(0 0 0 rgba(60,191,242,0));
+        transform: translateY(0) rotate(0deg) scale(var(--logo-scale));
+    }
+    30% {
+        filter: drop-shadow(0 6px 14px rgba(60,191,242,0.06)) drop-shadow(0 3px 8px rgba(182,23,225,0.04));
+        transform: translateY(-8px) rotate(-1.5deg) scale(calc(var(--logo-scale) * 1.03));
+    }
+    55% {
+        filter: drop-shadow(0 10px 20px rgba(60,191,242,0.09)) drop-shadow(0 5px 12px rgba(182,23,225,0.06));
+        transform: translateY(6px) rotate(1deg) scale(calc(var(--logo-scale) * 0.99));
+    }
+    100% {
+        filter: drop-shadow(0 0 0 rgba(60,191,242,0));
+        transform: translateY(0) rotate(0deg) scale(var(--logo-scale));
+    }
+}
+@media (max-width: 992px) {
+    .nav-links { display:none; }
+    .logogandi { height:90px; max-width:260px; transform: translateY(0) scale(1.6); }
+    .services { padding:60px 0; }
+    .ceo-card { padding:18px; gap:12px; }
+    .ceo-photo { width:180px; height:180px; }
+}
+.nav-links { display:flex; gap:28px; align-items:center; }
+.nav-links a { color:var(--text); text-decoration:none; font-weight:500; padding:6px 0; position:relative; transition: color .22s ease; }
+.nav-links a:hover { color:var(--accent); }
+.btn-login { background: linear-gradient(135deg, rgba(182,23,225,0.95), rgba(208,74,247,0.85)); color:white; padding:10px 18px; border-radius:20px; text-decoration:none; font-weight:600; }
+
+.hero { padding:110px 0 80px; position:relative; opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s ease; }
+.hero.visible { opacity: 1; transform: translateY(0); }
+.hero .tagline { color:var(--secondary); font-weight:300; letter-spacing:1px; margin-bottom:18px; }
+.btn { display:inline-flex; align-items:center; gap:10px; padding:12px 22px; border-radius:999px; background:linear-gradient(135deg, rgba(182,23,225,0.9), rgba(60,191,242,0.85)); color:#fff; border:none; cursor:pointer; font-weight:600; transition: all 0.3s ease; }
+.btn:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(182,23,225,0.4); }
+.btn:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+
+.services { padding:100px 0; background: var(--primary-dark); position:relative; }
+.section-title { text-align:center; margin-bottom:56px; }
+.section-title h2 {
+    font-size:2.6rem;
+    margin-bottom:12px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.92), var(--accent));
+    -webkit-background-clip: text; background-clip:text; color:transparent;
+}
+.section-title p { color:var(--text-muted); max-width:720px; margin:0 auto; }
+
+.services-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(300px,1fr)); gap:28px; }
+
+.service-card {
+    background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));
+    border-radius:14px;
+    padding:30px;
+    border:1px solid rgba(255,255,255,0.03);
+    transition: transform .28s ease, box-shadow .28s ease;
+    box-shadow: 0 6px 18px rgba(2,6,23,0.45);
+}
+.service-card:hover { transform: translateY(-8px); box-shadow: 0 18px 45px rgba(2,6,23,0.55); border-color: rgba(182,23,225,0.12); }
+
+.service-icon {
+    width:80px; 
+    height:80px; 
+    display:flex; 
+    align-items:center; 
+    justify-content:center; 
+    margin-bottom:18px;
+    border-radius:16px; 
+    background: linear-gradient(135deg, rgba(182,23,225,0.1), rgba(60,191,242,0.08));
+    color:var(--accent); 
+    flex-shrink:0;
+    transition: all 0.3s ease;
+}
+.service-card:hover .service-icon {
+    transform: scale(1.05);
+    background: linear-gradient(135deg, rgba(182,23,225,0.15), rgba(60,191,242,0.12));
+}
+.service-icon svg { width:42px; height:42px; display:block; fill:none; stroke:currentColor; stroke-width:1.8; opacity:0.95; }
+
+.service-card h3 { font-size:1.2rem; margin-bottom:12px; color:var(--text); }
+.service-card p { color:var(--text-muted); line-height:1.6; font-size:0.99rem; }
+
+.file-table th { background: rgba(255,255,255,0.04); color:var(--accent); }
+
+/* MEJORAS PARA LA IMAGEN PRINCIPAL - AJUSTADA PARA MOSTRAR COMPLETA */
+.hero-graphic-wrap {
+    /* Tamaño ajustado para mostrar la imagen completa */
+    width: clamp(320px, 55vw, 650px);
+    aspect-ratio: 16 / 9;
+    height: auto;
+    margin: 0 auto;
+    background: linear-gradient(135deg, rgba(182,23,225,0.08), rgba(60,191,242,0.05));
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 0; /* Eliminado padding para que la imagen ocupe todo el espacio */
+    position: relative;
+    border: 1px solid rgba(182,23,225,0.1);
+    box-shadow: 0 10px 30px rgba(2,6,23,0.6);
+    animation: containerGlow 4s ease-in-out infinite alternate;
+}
+
+/* Animación de resplandor para el contenedor */
+@keyframes containerGlow {
+    0% {
+        box-shadow: 0 10px 30px rgba(2,6,23,0.6);
+        border-color: rgba(182,23,225,0.1);
+    }
+    100% {
+        box-shadow: 0 10px 40px rgba(182,23,225,0.2);
+        border-color: rgba(60,191,242,0.2);
+    }
+}
+
+.hero-graphic {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Cambiado a cover para mostrar la imagen completa */
+    display: block;
+    border-radius: 12px;
+    transition: transform 0.5s ease, filter 0.5s ease;
+    animation: floatImage 6s ease-in-out infinite;
+    filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));
+}
+
+/* Animación de flotado para la imagen */
+@keyframes floatImage {
+    0% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+.hero-graphic:hover {
+    transform: scale(1.02);
+    filter: drop-shadow(0 8px 25px rgba(182,23,225,0.3)) brightness(1.05);
+}
+
+/* Ajustes específicos para móviles */
+@media (max-width: 768px) {
+    .hero-graphic-wrap {
+        width: clamp(280px, 85vw, 500px);
+        padding: 0; /* Sin padding en móviles también */
+    }
+    .hero-graphic {
+        animation: floatImage 8s ease-in-out infinite;
+    }
+    .splash-logo {
+        height: 200px; /* Ajustado para móviles */
+        max-width: 450px;
+    }
+    .splash-text {
+        font-size: 2.2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-graphic-wrap { 
+        width: clamp(240px, 90vw, 400px); 
+        aspect-ratio: 4 / 3; 
+        padding: 0; /* Sin padding en móviles pequeños */
+    }
+    .hero-graphic { 
+        animation: floatImage 10s ease-in-out infinite;
+    }
+    .splash-logo {
+        height: 160px; /* Ajustado para móviles pequeños */
+        max-width: 350px;
+    }
+    .splash-text {
+        font-size: 1.8rem;
+    }
+}
+
+/* Stats (impacto medible) */
+.stats { padding:80px 0; }
+.stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:20px; }
+.stat-card {
+    background:var(--card-bg);
+    padding:28px;
+    border-radius:12px;
+    border:1px solid rgba(255,255,255,0.02);
+    text-align:center;
+    transition: transform .22s;
+}
+.stat-number { font-size:2rem; color:var(--secondary); font-weight:700; }
+.stat-label { color:var(--text-muted); margin-top:6px; }
+
+/* SECCIÓN CEO: foto grande definida en el código (sin opción de subir) - AJUSTADA */
+.ceo-section { padding:60px 0; background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00)); }
+.ceo-card {
+    max-width:1000px;
+    margin:18px auto 0;
+    background: var(--card-bg);
+    border:1px solid rgba(255,255,255,0.02);
+    border-radius:14px;
+    padding:28px;
+    display:flex;
+    gap:24px;
+    align-items:center;
+    box-shadow: 0 8px 30px rgba(2,6,23,0.45);
+    flex-wrap:wrap;
+}
+/* tamaño considerable para la foto del CEO (definida desde src en el HTML) - AJUSTADA */
+.ceo-photo {
+    width:320px;
+    height:320px;
+    border-radius:14px;
+    background: linear-gradient(135deg, rgba(60,191,242,0.06), rgba(182,23,225,0.04));
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    flex-shrink:0;
+    border:1px solid rgba(255,255,255,0.03);
+    padding: 0; /* Eliminado padding para que la imagen ocupe todo el espacio */
+}
+.ceo-photo img { 
+    width:100%; 
+    height:100%; 
+    object-fit:cover; /* Cambiado a cover para mostrar la imagen completa */
+    display:block; 
+    border-radius:12px; 
+}
+
+.ceo-info { flex:1; min-width:260px; }
+.ceo-name { font-size:1.3rem; color:var(--accent); font-weight:700; margin-bottom:6px; }
+.ceo-role { color:var(--secondary); margin-bottom:12px; font-weight:600; }
+.ceo-bio { color:var(--text-muted); line-height:1.6; }
+
+/* CARRUSEL DE LOGOS DE EMPRESAS CLIENTE - CON COLORES ORIGINALES */
+.clients-section {
+    padding: 80px 0;
+    background: var(--primary-dark);
+    overflow: hidden;
+}
+
+.clients-title {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.clients-title h2 {
+    font-size: 2.2rem;
+    margin-bottom: 12px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.92), var(--accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.clients-title p {
+    color: var(--text-muted);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.clients-carousel {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    padding: 20px 0;
+}
+
+.clients-track {
+    display: flex;
+    animation: scroll 30s linear infinite;
+    width: calc(200px * 14); /* Número de logos * ancho de cada logo */
+}
+
+.client-logo {
+    flex: 0 0 auto;
+    width: 180px;
+    height: 100px;
+    margin: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white; /* Fondo blanco para mejor contraste */
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    padding: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.client-logo:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.client-logo img {
+    max-width: 100%;
+    max-height: 70px;
+    object-fit: contain;
+    /* QUITAMOS CUALQUIER FILTRO PARA MANTENER COLORES ORIGINALES */
+    filter: none !important;
+    opacity: 1 !important;
+    transition: transform 0.3s ease;
+}
+
+.client-logo:hover img {
+    transform: scale(1.05);
+    /* SIN FILTROS EN HOVER TAMBIÉN */
+    filter: none !important;
+}
+
+/* Animación del carrusel */
+@keyframes scroll {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(calc(-200px * 7)); /* Mitad del ancho total */
+    }
+}
+
+/* Pausar animación al hacer hover */
+.clients-carousel:hover .clients-track {
+    animation-play-state: paused;
+}
+
+/* WhatsApp flotante - MEJORADO CON RESPUESTA INMEDIATA */
+.whatsapp-btn {
+    position:fixed;
+    right:20px;
+    bottom:20px;
+    width:70px;
+    height:70px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background: #25D366; /* Color verde de WhatsApp */
+    color:#fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    border:none;
+    cursor:pointer;
+    z-index:1200;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    animation: pulse 2s infinite;
+    /* Asegurar que el botón sea clickeable inmediatamente */
+    pointer-events: auto !important;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.whatsapp-btn:active {
+    transform: scale(0.95);
+    transition: transform 0.1s ease;
+}
+
+.whatsapp-btn:hover { 
+    transform: translateY(-5px) scale(1.05); 
+    box-shadow: 0 8px 20px rgba(37, 211, 102, 0.5); 
+    animation: none; /* Detiene la animación de pulso al hacer hover */
+}
+
+.whatsapp-btn svg { 
+    width:36px; 
+    height:36px; 
+    fill: white;
+    pointer-events: none;
+}
+
+/* Animación de pulso para el botón */
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 12px rgba(37, 211, 102, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
+    }
+}
+
+/* VENTANA DE WHATSAPP - MEJORADA */
+.whatsapp-modal {
+    position: fixed;
+    bottom: 100px;
+    right: 20px;
+    width: 320px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    z-index: 1300;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+    transform: translateY(20px);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    /* Asegurar que la ventana no interfiera con el botón */
+    pointer-events: none;
+}
+
+.whatsapp-modal.active {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.whatsapp-header {
+    background: #25D366;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: move;
+}
+
+.whatsapp-header svg {
+    width: 24px;
+    height: 24px;
+    fill: white;
+}
+
+.whatsapp-header h3 {
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.whatsapp-body {
+    padding: 20px;
+}
+
+.whatsapp-message {
+    width: 100%;
+    min-height: 120px;
+    padding: 12px 15px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,0.05);
+    color: var(--text);
+    font-size: 0.95rem;
+    resize: vertical;
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.whatsapp-message:focus {
+    outline: none;
+    border-color: #25D366;
+    box-shadow: 0 0 0 2px rgba(37, 211, 102, 0.2);
+    background: rgba(255,255,255,0.08);
+}
+
+.whatsapp-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.whatsapp-cancel {
+    padding: 10px 16px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.05);
+    color: var(--text);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.whatsapp-cancel:hover {
+    background: rgba(255,255,255,0.1);
+}
+
+.whatsapp-cancel:active {
+    transform: scale(0.98);
+}
+
+.whatsapp-send {
+    padding: 10px 20px;
+    border-radius: 8px;
+    background: #25D366;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: inherit;
+}
+
+.whatsapp-send:hover {
+    background: #128C7E;
+    transform: translateY(-2px);
+}
+
+.whatsapp-send:active {
+    transform: scale(0.98);
+}
+
+.whatsapp-send svg {
+    width: 18px;
+    height: 18px;
+    fill: white;
+}
+
+/* Overlay para cerrar al hacer clic fuera */
+.whatsapp-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    z-index: 1299;
+    display: none;
+}
+
+.whatsapp-overlay.active {
+    display: block;
+}
+
+/* Para pantallas grandes (PC) */
+@media (min-width: 1024px) {
+    .whatsapp-btn {
+        width: 70px;
+        height: 70px;
+        right: 30px;
+        bottom: 30px;
+    }
+    .whatsapp-btn svg {
+        width: 36px;
+        height: 36px;
+    }
+    .whatsapp-modal {
+        right: 30px;
+        bottom: 110px;
+    }
+}
+
+/* Para dispositivos móviles */
+@media (max-width: 768px) {
+    .whatsapp-btn {
+        width: 60px;
+        height: 60px;
+        right: 15px;
+        bottom: 15px;
+    }
+    .whatsapp-btn svg {
+        width: 30px;
+        height: 30px;
+    }
+    .whatsapp-btn:hover {
+        transform: translateY(-4px) scale(1.02);
+    }
+    
+    .whatsapp-modal {
+        right: 15px;
+        bottom: 85px;
+        width: calc(100vw - 40px);
+        max-width: 320px;
+    }
+    
+    .client-logo {
+        width: 140px;
+        height: 80px;
+        margin: 0 15px;
+    }
+    
+    .clients-track {
+        animation: scroll 20s linear infinite;
+    }
+}
+
+/* Para pantallas muy pequeñas */
+@media (max-width: 480px) {
+    .whatsapp-btn {
+        width: 55px;
+        height: 55px;
+        right: 10px;
+        bottom: 10px;
+    }
+    .whatsapp-btn svg {
+        width: 28px;
+        height: 28px;
+    }
+    
+    .whatsapp-modal {
+        right: 10px;
+        bottom: 75px;
+        width: calc(100vw - 30px);
+    }
+    
+    .client-logo {
+        width: 120px;
+        height: 70px;
+        margin: 0 10px;
+    }
+    
+    .clients-track {
+        animation: scroll 15s linear infinite;
+    }
+}
+
+@media (max-width: 992px) {
+    .nav-links { display:none; }
+    .logogandi { height:56px; transform: scale(1.4); }
+    .services { padding:60px 0; }
+    .ceo-card { padding:18px; gap:12px; }
+    .ceo-photo { width:180px; height:180px; }
+}
+
+/* NUEVA SECCIÓN "NUESTRO TRABAJO" - MODIFICADA */
+.our-work-section {
+    padding: 80px 0;
+    background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));
+}
+
+.work-content {
+    max-width: 1000px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.work-text h2 {
+    font-size: 2.2rem;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.92), var(--accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.work-text p {
+    color: var(--text-muted);
+    line-height: 1.7;
+    margin-bottom: 15px;
+    font-size: 1.05rem;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@media (max-width: 768px) {
+    .work-text h2 {
+        font-size: 1.8rem;
+    }
+}
+
+/* NUEVO DISEÑO PARA SERVICIOS ESPECÍFICOS */
+.service-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.service-list li {
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    padding-left: 20px;
+    position: relative;
+    line-height: 1.5;
+}
+
+.service-list li:before {
+    content: "•";
+    color: var(--secondary);
+    position: absolute;
+    left: 0;
+}
+
+/* SERVICIOS CON DISEÑO ESPECIAL - Nota Técnica y Resultados */
+.services-grid-special {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+    margin-top: 28px;
+}
+
+.services-grid-special .service-card {
+    grid-column: span 1;
+}
+
+@media (max-width: 768px) {
+    .services-grid-special {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* MEJORAS PARA EL FORMULARIO DE CONTACTO */
+.contact-form {
+    max-width:600px;
+    margin:0 auto;
+    background:var(--card-bg);
+    padding:30px;
+    border-radius:12px;
+    border:1px solid rgba(255,255,255,0.02);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-row {
+    display: flex;
+    gap: 15px;
+}
+
+.form-row .form-group {
+    flex: 1;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text);
+    font-weight: 500;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,0.05);
+    color: var(--text);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(60, 191, 242, 0.2);
+    background: rgba(255,255,255,0.08);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+/* MEJORAS ESPECÍFICAS PARA EL SELECTOR DE SERVICIOS */
+.form-group select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233cbff2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+    padding-right: 40px;
+    cursor: pointer;
+}
+
+.form-group select option {
+    background: var(--card-bg);
+    color: var(--text);
+    padding: 12px;
+    border: none;
+}
+
+.form-group select:invalid {
+    color: var(--text-muted);
+}
+
+.form-group select option:first-child {
+    color: var(--text-muted);
+}
+
+.form-group select option:not(:first-child) {
+    color: var(--text);
+}
+
+.form-submit {
+    text-align: center;
+    margin-top: 25px;
+}
+
+.submit-btn {
+    position: relative;
+    overflow: hidden;
+}
+
+.submit-btn .btn-text {
+    transition: all 0.3s ease;
+}
+
+.submit-btn .btn-loading {
+    display: none;
+}
+
+.submit-btn.loading .btn-text {
+    opacity: 0;
+}
+
+.submit-btn.loading .btn-loading {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.loading-spinner {
+    width: 18px;
+    height: 18px;
+    border: 2px solid transparent;
+    border-top: 2px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.form-message {
+    margin-top: 15px;
+    padding: 12px;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.form-message.success {
+    background: rgba(46, 204, 113, 0.1);
+    color: #2ecc71;
+    border: 1px solid rgba(46, 204, 113, 0.3);
+}
+
+.form-message.error {
+    background: rgba(231, 76, 60, 0.1);
+    color: #e74c3c;
+    border: 1px solid rgba(231, 76, 60, 0.3);
+}
+
+/* Estilos para mejorar la respuesta táctil */
+@media (max-width: 768px) {
+    .whatsapp-btn {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+    
+    .whatsapp-btn:active {
+        background: #128C7E;
+        transform: scale(0.9);
+    }
+}
+    </style>
+</head>
+<body>
+    <!-- Pantalla de Bienvenida -->
+    <div id="splash-screen">
+        <div class="splash-content">
+            <img src="logo.png" class="splash-logo" alt="GandDI">
+            <h1 class="splash-text">Bienvenidos</h1>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <img src="logo.png" class="logogandi" alt="GandDI">
+                </div>
+
+                <div class="nav-links">
+                    <a href="#inicio">Inicio</a>
+                    <a href="#servicios">Servicios</a>
+                    <a href="#estadisticas">Estadísticas</a>
+                    <a href="#ceo">Ceo</a>
+                    <a href="#contacto">Contacto</a>
+                </div>
+
+                <a href="login/index.html" class="btn-login">Acceso Clientes</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero" id="inicio">
+            <div class="container" style="padding-top:30px;">
+                <div style="display:flex;align-items:center;gap:28px;flex-wrap:wrap;">
+                    <div style="flex:1;min-width:260px;">
+                        <h1 style="font-size:2.4rem;margin-bottom:8px;">🩺 Sobre Nosotros</h1>
+                        <div class="tagline">Analytics & Data Intelligence</div>
+                        <p style="color:var(--text-muted);margin-top:14px;max-width:680px;">
+                            Ganddi es una solución innovadora que utiliza el poder de los datos en salud para transformar la forma en que las entidades del sector salud toman decisiones y gestionan el riesgo en salud.
+                        </p>
+                        <p style="color:var(--text-muted);margin-top:14px;max-width:680px;">
+                            Nuestro propósito es convertir la información en conocimiento útil que impulse la eficiencia, la prevención y la toma de decisiones informadas.
+                        </p>
+                        <p style="color:var(--text-muted);margin-top:14px;max-width:680px;">
+                            BIGDATA en Salud
+
+                            GanddI es una solución innovadora que aprovecha el poder de los datos para transformar la manera en que las entidades del sector salud toman decisiones y gestionan el riesgo.
+
+                            Nuestro propósito es convertir la información en conocimiento, impulsando la eficiencia operativa, la prevención en salud y la toma de decisiones estratégicas basadas en evidencia.
+                        </p>
+                        <div style="margin-top:18px;">
+                            <a href="#form-contacto" class="btn">Solicitar Demo</a>
+                        </div>
+                    </div>
+                    <div style="flex:1;min-width:260px;text-align:center;">
+                    <div class="hero-graphic-wrap">
+                        <picture>
+                            <source srcset="F1.jpeg" type="image/webp">
+                            <img id="heroImage" src="F1.jpeg" alt="Vista previa GandDI" class="hero-graphic">
+                        </picture>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- NUEVA SECCIÓN "NUESTRO TRABAJO" - MODIFICADA -->
+        <section class="our-work-section" id="nuestro-trabajo">
+            <div class="container">
+                <div class="work-content">
+                    <div class="work-text">
+                        <h2>💡 Nuestro Trabajo</h2>
+                        <p>En Ganddi estamos revolucionando el sector salud con un enfoque centrado en el análisis inteligente de datos.</p>
+                        <p>A través de herramientas de analítica avanzada, apoyamos a las entidades en la gestión del riesgo, la planificación operativa y la optimización de recursos.</p>
+                        <p>El tratamiento adecuado de los datos permite acceder, depurar y analizar grandes volúmenes de información para obtener una visión clara y estratégica de la realidad institucional.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    <!-- Services Section - ACTUALIZADA -->
+    <section class="services" id="servicios">
+        <div class="container">
+            <div class="section-title">
+                <h2>Nuestros Servicios</h2>
+                <p>Soluciones especializadas en análisis de datos para el sector salud</p>
+            </div>
+
+            <!-- Primera fila - Tres servicios -->
+            <div class="services-grid">
+                <!-- Análisis de Bases de Datos de Afiliados -->
+                <div class="service-card">
+                    <div class="service-icon" aria-hidden="true" style="color:var(--secondary);">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <h3>🔹 Análisis de Bases de Datos de Afiliados</h3>
+                    <div class="service-list">
+                        <li>Validación de calidad del dato</li>
+                        <li>Cálculo de carga operativa</li>
+                        <li>Cálculo de ingresos EPS</li>
+                        <li>Cálculo de metas, recursos y talento humano requerido (Res. 3280 de 2018)</li>
+                        <li>Estimación de costos (Res. 3280 de 2018)</li>
+                    </div>
+                </div>
+
+                <!-- Gestión de Riesgos en Salud -->
+                <div class="service-card">
+                    <div class="service-icon" aria-hidden="true" style="color:var(--accent);">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <h3>🔹 Gestión de Riesgos en Salud</h3>
+                    <div class="service-list">
+                        <li>Validación, ajustes e indicadores (Res. 3280 de 2018)</li>
+                        <li>Monitoreo de contratos EPS (frecuencias de uso y metas)</li>
+                        <li>Validación, ajustes e indicadores (Res. 202)</li>
+                        <li>Identificación de grupos de riesgo</li>
+                        <li>Análisis de costos de atención médica</li>
+                    </div>
+                </div>
+
+                <!-- Lupa al Giro -->
+                <div class="service-card">
+                    <div class="service-icon" aria-hidden="true" style="color:var(--secondary);">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" fill="currentColor"/>
+                            <path d="M12 10h-2v2H9v-2H7V9h2V7h1v2h2v1z" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <h3>🔹 Lupa al Giro</h3>
+                    <div class="service-list">
+                        <li>Seguimiento de LMA y restituciones EPS</li>
+                        <li>Comparativos entre LMA apropiadas y giros a IPS</li>
+                        <li>Cálculo de giros por base de datos – LMA vs Giros EPS</li>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Segunda fila - Dos servicios especiales (Nota Técnica y Resultados) -->
+            <div class="services-grid-special">
+                <!-- Nota Técnica -->
+                <div class="service-card">
+                    <div class="service-icon" aria-hidden="true" style="color:var(--accent);">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M8,13V15H16V13H8M8,16V18H13V16H8Z" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <h3>🔹 Nota Técnica</h3>
+                    <div class="service-list">
+                        <li>Análisis y proyección de ejecución de servicios y tecnologías</li>
+                        <li>Planeación de recursos financieros</li>
+                        <li>Planeación de recursos operativos (oferta/demanda)</li>
+                        <li>Determinación de cumplimiento o desviaciones en población susceptible, frecuencia de uso y costos para ajustar el riesgo</li>
+                    </div>
+                </div>
+
+                <!-- Resultados -->
+                <div class="service-card">
+                    <div class="service-icon" aria-hidden="true" style="color:var(--secondary);">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <h3>📊 Resultados</h3>
+                    <div class="service-list">
+                        <li>Generación de informes y dashboards personalizados</li>
+                        <li>Análisis de datos de pacientes</li>
+                        <li>Evaluación del impacto de intervenciones en salud</li>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Impacto Medible (STATS) - MEJORADO -->
+    <section class="stats" id="estadisticas">
+        <div class="container">
+            <div class="section-title">
+                <h2>Impacto Medible</h2>
+                <p style="color:var(--text-muted);">Resultados cuantificables que demuestran la efectividad de nuestras soluciones</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" data-target="95">0</div>
+                    <div class="stat-label">Clientes Satisfechos (%)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" data-target="150">0</div>
+                    <div class="stat-label">Proyectos Completados</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" data-target="40">0</div>
+                    <div class="stat-label">EPS Optimizadas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" data-target="98">0</div>
+                    <div class="stat-label">Precisión Analytics (%)</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN CEO (debajo de Impacto Medible) - foto definida directamente en el código -->
+    
+    <section class="ceo-section" id="ceo">
+        <div class="section-title" >
+                <h2>Ceo Ganddi</h2>
+             </div>
+        <div class="ceo-card container">
+            
+            <div class="ceo-photo" aria-hidden="true">
+                <!-- Cambia la ruta a la imagen que quieras usar desde el código -->
+                <img id="ceoPhotoPreview" src="ing.png" alt="Foto del CEO">
+            </div>
+            <div class="ceo-info">
+                <div class="ceo-name">Ing. Juan Carlos Matiz Martínez</div>
+                <div class="ceo-role">Magíster en Big Data
+                 CEO & Fundador de GanddI</div>
+                <div class="ceo-bio">
+                    Juan Carlos lidera la estrategia de producto y la visión analítica en GanddI, impulsando soluciones que transforman la operación y fortalecen la Gestión del Riesgo en Salud mediante la integración y articulación inteligente de los datos que circulan en los sistemas de información de las entidades del sector.
+                    Con más de 20 años de experiencia en el sector salud, ha desarrollado su trayectoria profesional principalmente en el análisis de datos en salud, procesos de aseguramiento, gestión del riesgo, contratación, calidad y área financiera.
+                    Ha trabajado con Empresas Promotoras de Salud (EPS), Empresas Sociales del Estado (ESE), Instituciones Prestadoras de Servicios de Salud (IPS) y como profesional independiente, integrando la analítica de datos en la toma de decisiones estratégicas para mejorar los resultados en salud y la eficiencia institucional.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CARRUSEL DE EMPRESAS CLIENTE -->
+    <section class="clients-section" id="clientes">
+        <div class="container">
+            <div class="clients-title">
+                <h2>Nuestros Clientes</h2>
+                <p>Empresas que confían en nuestras soluciones de inteligencia de datos</p>
+            </div>
+            
+            <div class="clients-carousel">
+                <div class="clients-track">
+                    <!-- Logos de empresas - puedes reemplazar estas imágenes con las de tus clientes -->
+                    <div class="client-logo">
+                        <img src="dus.png" alt="Cliente 1">
+                    </div>
+                    <div class="client-logo">
+                        <img src="mariano.png" alt="Cliente 2">
+                    </div>
+                    <div class="client-logo">
+                        <img src="fonseca.png" alt="Cliente 3">
+                    </div>
+                    <div class="client-logo">
+                        <img src="win.png" alt="Cliente 4">
+                    </div>
+                    <div class="client-logo">
+                        <img src="mariano.png" alt="Cliente 5">
+                    </div>
+                    <div class="client-logo">
+                        <img src="fonseca.png" alt="Cliente 6">
+                    </div>
+                    <div class="client-logo">
+                        <img src="dus.png" alt="Cliente 7">
+                    </div>
+                    <!-- Duplicamos los logos para crear un efecto de carrusel infinito -->
+                    <div class="client-logo">
+                        <img src="win.png" alt="Cliente 1">
+                    </div>
+                    <div class="client-logo">
+                        <img src="amb.png" alt="Cliente 2">
+                    </div>
+                    <div class="client-logo">
+                        <img src="fonseca.png" alt="Cliente 3">
+                    </div>
+                    <div class="client-logo">
+                        <img src="amb.png" alt="Cliente 4">
+                    </div>
+                    <div class="client-logo">
+                        <img src="dus.png" alt="Cliente 5">
+                    </div>
+                    <div class="client-logo">
+                        <img src="win.png" alt="Cliente 6">
+                    </div>
+                    <div class="client-logo">
+                        <img src="mariano.png" alt="Cliente 7">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact form - MEJORADO -->
+    <section class="contact-section" id="form-contacto" style="padding:80px 0;background:var(--primary-dark);">
+        <div class="container">
+            <div class="section-title">
+                <h2>Contáctanos</h2>
+                <p style="color:var(--text-muted);">¿Tienes dudas o quieres una demo? Escríbenos y te responderemos pronto.</p>
+            </div>
+            <form class="contact-form" id="contactForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nombre">Nombre completo</label>
+                        <input type="text" id="nombre" name="nombre" placeholder="Tu nombre completo" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Correo electrónico</label>
+                        <input type="email" id="email" name="email" placeholder="tu.correo@ejemplo.com" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="empresa">Empresa (opcional)</label>
+                    <input type="text" id="empresa" name="empresa" placeholder="Nombre de tu empresa">
+                </div>
+                <div class="form-group">
+                    <label for="servicio">Servicio de interés</label>
+                    <select id="servicio" name="servicio" required>
+                        <option value="" disabled selected>Selecciona un servicio</option>
+                        <option value="analisis-bases-datos">Análisis de Bases de Datos de Afiliados</option>
+                        <option value="gestion-riesgos">Gestión de Riesgos en Salud</option>
+                        <option value="lupa-giro">Lupa al Giro</option>
+                        <option value="nota-tecnica">Nota Técnica</option>
+                        <option value="resultados">Resultados y Dashboards</option>
+                        <option value="multiple">Múltiples servicios</option>
+                        <option value="otro">Otro</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="mensaje">Mensaje</label>
+                    <textarea id="mensaje" name="mensaje" rows="5" placeholder="Cuéntanos cómo podemos ayudarte..." required></textarea>
+                </div>
+                <div class="form-submit">
+                    <button type="submit" class="btn submit-btn" id="submitBtn">
+                        <span class="btn-text">Enviar mensaje</span>
+                        <span class="btn-loading">
+                            <span class="loading-spinner"></span>
+                            Enviando...
+                        </span>
+                    </button>
+                </div>
+                <div id="formMsg" class="form-message"></div>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contacto" style="padding:40px 0;background:linear-gradient(135deg,var(--primary),var(--primary-dark));border-top:1px solid var(--border);">
+        <div class="container" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;">
+            <div>
+                <div style="font-weight:800;font-size:1.4rem;color:var(--accent);">GandDI</div>
+                <div style="color:var(--text-muted);margin-top:8px;">Analytics & Data Intelligence</div>
+                <p style="color:var(--text-muted);margin-top:12px;">Especialistas en analytics e inteligencia de datos para el sector salud.</p>
+            </div>
+            <div>
+                <h4 style="color:var(--accent);">Contacto</h4>
+                <ul style="color:var(--text-muted);list-style:none;padding-left:0;margin-top:8px;">
+                    <li>📍 Villa Ligia 1 Mz E Casa 18 Valledupar Cesar</li>
+                    <li>✉️ Juan.Matiz@ganddi.com</li>
+                    <li>🕒 Lunes - Viernes: 8:00 - 18:00</li>
+                </ul>
+            </div>
+            <div>
+                <h4 style="color:var(--accent);">Servicios</h4>
+                <ul style="color:var(--text-muted);list-style:none;padding-left:0;margin-top:8px;">
+                    <li>Analytics Avanzado</li>
+                    <li>Business Intelligence</li>
+                    <li>Data Visualization</li>
+                </ul>
+            </div>
+        </div>
+        <div style="text-align:center;color:var--text-muted;margin-top:20px;padding-top:20px;">&copy; 2025 GandDI Analytics. Todos los derechos reservados.</div>
+    </footer>
+
+    <!-- WhatsApp flotante funcional -->
+    <button class="whatsapp-btn" id="waBtn" aria-label="Contactar por WhatsApp" title="Contáctanos por WhatsApp">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893-.001-3.189-1.262-6.187-3.55-8.444" fill="currentColor"/>
+        </svg>
+    </button>
+
+    <!-- Overlay para cerrar al hacer clic fuera -->
+    <div class="whatsapp-overlay" id="whatsappOverlay"></div>
+
+    <!-- Ventana de WhatsApp -->
+    <div class="whatsapp-modal" id="whatsappModal">
+        <div class="whatsapp-header">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893-.001-3.189-1.262-6.187-3.55-8.444" fill="currentColor"/>
+            </svg>
+            <h3>Enviar mensaje por WhatsApp</h3>
+        </div>
+        <div class="whatsapp-body">
+            <textarea class="whatsapp-message" id="whatsappMessage" placeholder="Escribe tu mensaje aquí...">Hola, estoy interesado en GandDI Analytics. ¿Me pueden ayudar?</textarea>
+            <div class="whatsapp-actions">
+                <button class="whatsapp-cancel" id="whatsappCancel">Cancelar</button>
+                <button class="whatsapp-send" id="whatsappSend">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" fill="currentColor"/>
+                    </svg>
+                    Enviar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+    // Inicializar EmailJS (debes reemplazar estos valores con los tuyos)
+    (function(){
+        // Inicializar EmailJS con tu Public Key
+        // Obtén tu Public Key en: https://dashboard.emailjs.com/admin/integration
+        emailjs.init("4LJHPgS23SJgS60Dy"); // Reemplaza con tu Public Key
+    })();
+
+    // Pantalla de bienvenida
+    document.addEventListener('DOMContentLoaded', function() {
+        const splashScreen = document.getElementById('splash-screen');
+        const header = document.querySelector('header');
+        const headerLogo = document.querySelector('.logogandi');
+        const heroSection = document.querySelector('.hero');
+        
+        // Esperar 2 segundos antes de iniciar la transición
+        setTimeout(() => {
+            // Ocultar la pantalla de bienvenida
+            splashScreen.classList.add('hidden');
+            
+            // Mostrar el header con animación
+            setTimeout(() => {
+                header.classList.add('visible');
+                
+                // Mostrar el logo en el header con animación
+                setTimeout(() => {
+                    headerLogo.classList.add('visible');
+                    
+                    // Mostrar la sección hero
+                    setTimeout(() => {
+                        heroSection.classList.add('visible');
+                    }, 300);
+                }, 400);
+            }, 500);
+        }, 2000);
+
+        // Inicializar contadores después de que la página cargue completamente
+        initCounters();
+    });
+
+    // WhatsApp funcional con respuesta inmediata
+    (function(){
+        const phone = '573164939946';
+        const waBtn = document.getElementById('waBtn');
+        const whatsappModal = document.getElementById('whatsappModal');
+        const whatsappOverlay = document.getElementById('whatsappOverlay');
+        const whatsappMessage = document.getElementById('whatsappMessage');
+        const whatsappSend = document.getElementById('whatsappSend');
+        const whatsappCancel = document.getElementById('whatsappCancel');
+        
+        // Variable para controlar si ya se hizo clic
+        let isProcessing = false;
+        
+        // Función para abrir la ventana de WhatsApp
+        function openWhatsappModal() {
+            if (isProcessing) return;
+            
+            isProcessing = true;
+            
+            // Mostrar overlay y modal inmediatamente
+            whatsappOverlay.classList.add('active');
+            whatsappModal.classList.add('active');
+            whatsappMessage.focus();
+            
+            // Resetear el estado después de un breve tiempo
+            setTimeout(() => {
+                isProcessing = false;
+            }, 300);
+        }
+        
+        // Función para cerrar la ventana de WhatsApp
+        function closeWhatsappModal() {
+            whatsappOverlay.classList.remove('active');
+            whatsappModal.classList.remove('active');
+            isProcessing = false;
+        }
+        
+        // Abrir ventana de WhatsApp al hacer clic en el botón
+        waBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            openWhatsappModal();
+        });
+        
+        // Enviar mensaje por WhatsApp
+        whatsappSend.addEventListener('click', function() {
+            const msg = encodeURIComponent(whatsappMessage.value);
+            const url = 'https://wa.me/' + phone + '?text=' + msg;
+            window.open(url, '_blank', 'noopener');
+            closeWhatsappModal();
+        });
+        
+        // Cancelar y cerrar ventana
+        whatsappCancel.addEventListener('click', function() {
+            closeWhatsappModal();
+        });
+        
+        // Cerrar ventana al hacer clic en el overlay
+        whatsappOverlay.addEventListener('click', function() {
+            closeWhatsappModal();
+        });
+        
+        // Cerrar con Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && whatsappModal.classList.contains('active')) {
+                closeWhatsappModal();
+            }
+        });
+        
+        // Enviar con Ctrl+Enter o Cmd+Enter
+        whatsappMessage.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                e.preventDefault();
+                whatsappSend.click();
+            }
+        });
+        
+        // Prevenir que el clic en el modal cierre la ventana
+        whatsappModal.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+        
+        // Mejorar la respuesta táctil en dispositivos móviles
+        if ('ontouchstart' in window) {
+            // Agregar evento táctil para mejor respuesta
+            waBtn.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                this.style.transform = 'scale(0.95)';
+                this.style.background = '#128C7E';
+            }, { passive: false });
+            
+            waBtn.addEventListener('touchend', function(e) {
+                e.preventDefault();
+                this.style.transform = '';
+                this.style.background = '#25D366';
+                openWhatsappModal();
+            }, { passive: false });
+            
+            waBtn.addEventListener('touchcancel', function() {
+                this.style.transform = '';
+                this.style.background = '#25D366';
+            });
+        }
+        
+        // Asegurar que el botón sea siempre clickeable
+        document.addEventListener('DOMContentLoaded', function() {
+            // Forzar que el botón sea interactivo
+            waBtn.style.pointerEvents = 'auto';
+            waBtn.disabled = false;
+        });
+    })();
+
+    // Contact form con EmailJS
+    document.getElementById('contactForm')?.addEventListener('submit', function(e){
+        e.preventDefault();
+        
+        const submitBtn = document.getElementById('submitBtn');
+        const formMsg = document.getElementById('formMsg');
+        
+        // Mostrar estado de carga
+        submitBtn.classList.add('loading');
+        submitBtn.disabled = true;
+        formMsg.textContent = '';
+        formMsg.className = 'form-message';
+        
+        // Preparar datos del formulario
+        const formData = {
+            nombre: document.getElementById('nombre').value,
+            email: document.getElementById('email').value,
+            empresa: document.getElementById('empresa').value,
+            servicio: document.getElementById('servicio').value,
+            mensaje: document.getElementById('mensaje').value,
+            fecha: new Date().toLocaleString('es-ES')
+        };
+        
+        // Enviar correo usando EmailJS
+        // Reemplaza 'YOUR_SERVICE_ID' y 'YOUR_TEMPLATE_ID' con tus valores reales
+        emailjs.send('service_fwrqok4', 'template_9rwlpbt', formData)
+            .then(function(response) {
+                console.log('SUCCESS!', response.status, response.text);
+                
+                // Mostrar mensaje de éxito
+                formMsg.textContent = '¡Mensaje enviado correctamente! Te contactaremos pronto.';
+                formMsg.classList.add('success');
+                
+                // Resetear formulario
+                document.getElementById('contactForm').reset();
+            }, function(error) {
+                console.log('FAILED...', error);
+                
+                // Mostrar mensaje de error
+                formMsg.textContent = 'Error al enviar el mensaje. Por favor, inténtalo de nuevo o contáctanos directamente por WhatsApp.';
+                formMsg.classList.add('error');
+            })
+            .finally(function() {
+                // Restaurar estado normal del botón
+                submitBtn.classList.remove('loading');
+                submitBtn.disabled = false;
+            });
+    });
+
+    // CONTADORES MEJORADOS - Funcionalidad completa
+    function initCounters() {
+        const statsSection = document.getElementById('estadisticas');
+        if (!statsSection) return;
+        
+        const counters = statsSection.querySelectorAll('.stat-number');
+        let started = false;
+
+        function animateCounter(el, target, duration = 2000) {
+            const start = 0;
+            const range = target - start;
+            const increment = target / (duration / 16); // 60fps
+            let current = start;
+            const startTime = Date.now();
+            
+            function updateCounter() {
+                const elapsed = Date.now() - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                // Usar easing para una animación más suave
+                current = start + range * easeOutQuart(progress);
+                
+                if (progress < 1) {
+                    el.textContent = Math.floor(current);
+                    requestAnimationFrame(updateCounter);
+                } else {
+                    el.textContent = target;
+                }
+            }
+            
+            requestAnimationFrame(updateCounter);
+        }
+        
+        // Función de easing para animación más natural
+        function easeOutQuart(t) {
+            return 1 - Math.pow(1 - t, 4);
+        }
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !started) {
+                    started = true;
+                    
+                    // Pequeño delay para mejor UX
+                    setTimeout(() => {
+                        counters.forEach(counter => {
+                            const target = parseInt(counter.getAttribute('data-target') || '0', 10);
+                            animateCounter(counter, target, 2000);
+                        });
+                    }, 300);
+                    
+                    observer.disconnect();
+                }
+            });
+        }, { 
+            threshold: 0.3, // Se activa cuando el 30% de la sección es visible
+            rootMargin: '0px 0px -50px 0px' // Se activa un poco antes de que llegue al viewport
+        });
+
+        observer.observe(statsSection);
+    }
+
+    // También activar contadores al hacer scroll manualmente
+    window.addEventListener('scroll', function() {
+        const statsSection = document.getElementById('estadisticas');
+        if (statsSection) {
+            const sectionTop = statsSection.getBoundingClientRect().top;
+            const windowHeight = window.innerHeight;
+            
+            // Si la sección está en el viewport
+            if (sectionTop < windowHeight * 0.8) {
+                initCounters();
+            }
+        }
+    });
+    </script>
+</body>
+</html>

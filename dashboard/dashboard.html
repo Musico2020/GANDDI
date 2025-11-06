@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - GandDI | Gestiona - Analiza - Decide</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <div class="logo-main">GandDI</div>
+                    <div class="logo-tagline">Gestiona - Analiza - Decide</div>
+                </div>
+                <div class="nav-links">
+                    <a href="index.html" class="active">Dashboard</a>
+                    <a href="uploand.php" id="uploadLink">Subir Archivo</a>
+                    <a href="admin.php" id="adminLink">Administración</a>
+                    <a href="profile.html">Perfil</a>
+                    <a href="../login/index.html">Cerrar Sesión</a>
+                </div>
+                <div class="user-info">
+                    <span id="userRole">EPS Sanitas</span>
+                    <div class="user-avatar">👤</div>
+                </div>
+                <div class="mobile-menu">☰</div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <div class="dashboard-header">
+            <h1>Bienvenido, <span id="userName">Usuario EPS</span></h1>
+            <p>Dashboard de gestión de archivos <span id="dashboardType">EPS Sanitas</span></p>
+        </div>
+
+        <!-- Estadísticas -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="totalFiles">0</div>
+                <div class="stat-label">Total Archivos</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="radicadosCount">0</div>
+                <div class="stat-label">Radicados</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="pendientesCount">0</div>
+                <div class="stat-label">Pendientes</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="epsCount">0</div>
+                <div class="stat-label">EPS Activas</div>
+            </div>
+        </div>
+
+        <!-- Filtros -->
+        <div class="filters-section">
+            <div class="filter-group">
+                <label for="epsFilter">Filtrar por EPS:</label>
+                <select id="epsFilter">
+                    <option value="">Todas las EPS</option>
+                    <option value="sanitas">EPS Sanitas</option>
+                    <option value="sura">EPS Sura</option>
+                    <option value="coomeva">EPS Coomeva</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="statusFilter">Filtrar por estado:</label>
+                <select id="statusFilter">
+                    <option value="">Todos los estados</option>
+                    <option value="radicado">Radicado</option>
+                    <option value="pendiente">Pendiente</option>
+                </select>
+            </div>
+            <button class="btn btn-secondary" id="resetFilters">Resetear Filtros</button>
+        </div>
+
+        <!-- Lista de Archivos -->
+        <div class="section">
+            <div class="section-header">
+                <h2>Archivos <span id="sectionTitle">de mi EPS</span></h2>
+                <button class="btn" id="uploadBtn">📁 Subir Nuevo Archivo</button>
+            </div>
+            
+            <div class="files-table-container">
+                <table class="files-table">
+                    <thead>
+                        <tr>
+                            <th>Archivo</th>
+                            <th>Tipo</th>
+                            <th>Tamaño</th>
+                            <th id="epsColumn">EPS</th>
+                            <th id="userColumn">Usuario</th>
+                            <th>Fecha</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="filesTableBody">
+                        <!-- Los archivos se cargan dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="no-files" id="noFilesMessage" style="display: none;">
+                <p>No hay archivos para mostrar</p>
+                <button class="btn" onclick="window.location.href='upload.html'">Subir primer archivo</button>
+            </div>
+        </div>
+
+        <!-- Sección de EPS (Solo para admin) -->
+        <div class="section" id="epsSection" style="display: none;">
+            <h2>Gestión por EPS</h2>
+            <div class="eps-grid" id="epsGrid">
+                <!-- Las EPS se cargan dinámicamente -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal de detalles -->
+    <div class="modal" id="fileModal">
+        <div class="modal-content">
+            <button class="close-modal" id="closeFileModal">×</button>
+            <div class="modal-header">
+                <h2 id="modalFileName">Detalles del Archivo</h2>
+            </div>
+            <div class="file-details" id="fileDetails">
+                <!-- Los detalles se cargan dinámicamente -->
+            </div>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
