@@ -178,13 +178,125 @@ header.visible {
         transform: translateY(0) rotate(0deg) scale(var(--logo-scale));
     }
 }
+
+/* MENÚ HAMBURGUESA - SOLO PARA MÓVIL */
+.hamburger-menu {
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 30px;
+    height: 21px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 1001;
+}
+
+.hamburger-menu span {
+    display: block;
+    height: 3px;
+    width: 100%;
+    background-color: var(--text);
+    border-radius: 3px;
+    transition: all 0.3s ease;
+}
+
+.hamburger-menu.active span:nth-child(1) {
+    transform: translateY(9px) rotate(45deg);
+}
+
+.hamburger-menu.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger-menu.active span:nth-child(3) {
+    transform: translateY(-9px) rotate(-45deg);
+}
+
+/* MENÚ MÓVIL */
+.mobile-nav {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 80%;
+    max-width: 300px;
+    height: 100vh;
+    background: rgba(0,12,48,0.95);
+    backdrop-filter: blur(10px);
+    z-index: 999;
+    padding: 80px 20px 20px;
+    transition: right 0.3s ease;
+    overflow-y: auto;
+    border-left: 1px solid var(--border);
+}
+
+.mobile-nav.active {
+    right: 0;
+}
+
+.mobile-nav-links {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.mobile-nav-links a {
+    color: var(--text);
+    text-decoration: none;
+    font-size: 1.1rem;
+    padding: 12px 15px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    border-left: 3px solid transparent;
+}
+
+.mobile-nav-links a:hover {
+    background: rgba(182,23,225,0.1);
+    border-left-color: var(--secondary);
+    color: var(--accent);
+}
+
+.mobile-nav-links .btn-login {
+    background: linear-gradient(135deg, rgba(182,23,225,0.95), rgba(208,74,247,0.85));
+    color: white;
+    padding: 12px 18px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-weight: 600;
+    text-align: center;
+    margin-top: 10px;
+    border: none;
+}
+
+/* Overlay para cerrar menú móvil */
+.mobile-nav-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 998;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.mobile-nav-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
 @media (max-width: 992px) {
     .nav-links { display:none; }
+    .hamburger-menu { display: flex; }
     .logogandi { height:90px; max-width:260px; transform: translateY(0) scale(1.6); }
     .services { padding:60px 0; }
     .ceo-card { padding:18px; gap:12px; }
     .ceo-photo { width:180px; height:180px; }
 }
+
 .nav-links { display:flex; gap:28px; align-items:center; }
 .nav-links a { color:var(--text); text-decoration:none; font-weight:500; padding:6px 0; position:relative; transition: color .22s ease; }
 .nav-links a:hover { color:var(--accent); }
@@ -1285,9 +1397,29 @@ header.visible {
                 </div>
 
                 <a href="login/index.html" class="btn-login">Acceso Clientes</a>
+                
+                <!-- Botón hamburguesa para móvil -->
+                <button class="hamburger-menu" id="hamburgerMenu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
             </nav>
         </div>
     </header>
+
+    <!-- Menú móvil -->
+    <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
+    <nav class="mobile-nav" id="mobileNav">
+        <div class="mobile-nav-links">
+            <a href="#inicio" class="mobile-nav-link">Inicio</a>
+            <a href="#servicios" class="mobile-nav-link">Servicios</a>
+            <a href="#estadisticas" class="mobile-nav-link">Estadísticas</a>
+            <a href="#equipo" class="mobile-nav-link">Equipo</a>
+            <a href="#contacto" class="mobile-nav-link">Contacto</a>
+            <a href="login/index.html" class="btn-login">Acceso Clientes</a>
+        </div>
+    </nav>
 
     <main>
         <section class="hero" id="inicio">
@@ -1793,7 +1925,68 @@ header.visible {
         
         // Inicializar carrusel del equipo
         initTeamCarousel();
+        
+        // Inicializar menú hamburguesa
+        initHamburgerMenu();
     });
+
+    // FUNCIONALIDAD DEL MENÚ HAMBURGUESA
+    function initHamburgerMenu() {
+        const hamburgerMenu = document.getElementById('hamburgerMenu');
+        const mobileNav = document.getElementById('mobileNav');
+        const mobileNavOverlay = document.getElementById('mobileNavOverlay');
+        const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+        
+        // Función para abrir el menú móvil
+        function openMobileMenu() {
+            hamburgerMenu.classList.add('active');
+            mobileNav.classList.add('active');
+            mobileNavOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Prevenir scroll del body
+        }
+        
+        // Función para cerrar el menú móvil
+        function closeMobileMenu() {
+            hamburgerMenu.classList.remove('active');
+            mobileNav.classList.remove('active');
+            mobileNavOverlay.classList.remove('active');
+            document.body.style.overflow = ''; // Restaurar scroll del body
+        }
+        
+        // Abrir menú al hacer clic en el botón hamburguesa
+        hamburgerMenu.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (mobileNav.classList.contains('active')) {
+                closeMobileMenu();
+            } else {
+                openMobileMenu();
+            }
+        });
+        
+        // Cerrar menú al hacer clic en un enlace
+        mobileNavLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                closeMobileMenu();
+            });
+        });
+        
+        // Cerrar menú al hacer clic en el overlay
+        mobileNavOverlay.addEventListener('click', function() {
+            closeMobileMenu();
+        });
+        
+        // Cerrar menú con tecla Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && mobileNav.classList.contains('active')) {
+                closeMobileMenu();
+            }
+        });
+        
+        // Prevenir que el clic en el menú lo cierre
+        mobileNav.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+    }
 
     // WhatsApp funcional con respuesta inmediata
     (function(){
