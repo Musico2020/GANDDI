@@ -207,7 +207,13 @@ header.visible {
 }
 .section-title p { color:var(--text-muted); max-width:720px; margin:0 auto; }
 
-.services-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(300px,1fr)); gap:28px; }
+/* SERVICIOS CON 3 TARJETAS POR FILA */
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+    margin-bottom: 40px;
+}
 
 .service-card {
     background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));
@@ -216,6 +222,9 @@ header.visible {
     border:1px solid rgba(255,255,255,0.03);
     transition: transform .28s ease, box-shadow .28s ease;
     box-shadow: 0 6px 18px rgba(2,6,23,0.45);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 .service-card:hover { transform: translateY(-8px); box-shadow: 0 18px 45px rgba(2,6,23,0.55); border-color: rgba(182,23,225,0.12); }
 
@@ -320,6 +329,11 @@ header.visible {
     .splash-text {
         font-size: 2.2rem;
     }
+    
+    /* EN MÓVIL: 1 TARJETA POR FILA */
+    .services-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 @media (max-width: 480px) {
@@ -340,6 +354,13 @@ header.visible {
     }
 }
 
+/* EN TABLET: 2 TARJETAS POR FILA */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .services-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
 /* Stats (impacto medible) */
 .stats { padding:80px 0; }
 .stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:20px; }
@@ -354,47 +375,127 @@ header.visible {
 .stat-number { font-size:2rem; color:var(--secondary); font-weight:700; }
 .stat-label { color:var(--text-muted); margin-top:6px; }
 
-/* SECCIÓN CEO: foto grande definida en el código (sin opción de subir) - AJUSTADA */
-.ceo-section { padding:60px 0; background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00)); }
-.ceo-card {
-    max-width:1000px;
-    margin:18px auto 0;
-    background: var(--card-bg);
-    border:1px solid rgba(255,255,255,0.02);
-    border-radius:14px;
-    padding:28px;
-    display:flex;
-    gap:24px;
-    align-items:center;
-    box-shadow: 0 8px 30px rgba(2,6,23,0.45);
-    flex-wrap:wrap;
-}
-/* tamaño considerable para la foto del CEO (definida desde src en el HTML) - AJUSTADA */
-.ceo-photo {
-    width:320px;
-    height:320px;
-    border-radius:14px;
-    background: linear-gradient(135deg, rgba(60,191,242,0.06), rgba(182,23,225,0.04));
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    overflow:hidden;
-    flex-shrink:0;
-    border:1px solid rgba(255,255,255,0.03);
-    padding: 0; /* Eliminado padding para que la imagen ocupe todo el espacio */
-}
-.ceo-photo img { 
-    width:100%; 
-    height:100%; 
-    object-fit:cover; /* Cambiado a cover para mostrar la imagen completa */
-    display:block; 
-    border-radius:12px; 
+/* SECCIÓN EQUIPO DE TRABAJO - CARRUSEL */
+.team-section { 
+    padding:80px 0; 
+    background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00)); 
 }
 
-.ceo-info { flex:1; min-width:260px; }
-.ceo-name { font-size:1.3rem; color:var(--accent); font-weight:700; margin-bottom:6px; }
-.ceo-role { color:var(--secondary); margin-bottom:12px; font-weight:600; }
-.ceo-bio { color:var(--text-muted); line-height:1.6; }
+.team-carousel {
+    position: relative;
+    max-width: 1000px;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+.team-track {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+
+.team-slide {
+    flex: 0 0 100%;
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    padding: 20px;
+}
+
+.team-photo {
+    width: 320px;
+    height: 320px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, rgba(60,191,242,0.06), rgba(182,23,225,0.04));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+    border: 1px solid rgba(255,255,255,0.03);
+    padding: 0;
+}
+
+.team-photo img { 
+    width: 100%; 
+    height: 100%; 
+    object-fit: cover;
+    display: block; 
+    border-radius: 12px; 
+}
+
+.team-info { 
+    flex: 1; 
+    min-width: 260px; 
+}
+
+.team-name { 
+    font-size: 1.3rem; 
+    color: var(--accent); 
+    font-weight: 700; 
+    margin-bottom: 6px; 
+}
+
+.team-role { 
+    color: var(--secondary); 
+    margin-bottom: 12px; 
+    font-weight: 600; 
+}
+
+.team-bio { 
+    color: var(--text-muted); 
+    line-height: 1.6; 
+}
+
+/* Controles del carrusel */
+.team-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.team-prev,
+.team-next {
+    background: linear-gradient(135deg, rgba(182,23,225,0.1), rgba(60,191,242,0.1));
+    border: 1px solid rgba(182,23,225,0.2);
+    color: var(--accent);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1.2rem;
+}
+
+.team-prev:hover,
+.team-next:hover {
+    background: linear-gradient(135deg, rgba(182,23,225,0.2), rgba(60,191,242,0.2));
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(182,23,225,0.2);
+}
+
+.team-dots {
+    display: flex;
+    gap: 10px;
+}
+
+.team-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.team-dot.active {
+    background: var(--accent);
+    transform: scale(1.2);
+}
 
 /* CARRUSEL DE LOGOS DE EMPRESAS CLIENTE - CON COLORES ORIGINALES */
 .clients-section {
@@ -740,6 +841,17 @@ header.visible {
     .clients-track {
         animation: scroll 20s linear infinite;
     }
+    
+    /* Ajustes para el carrusel del equipo en móviles */
+    .team-slide {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .team-photo {
+        width: 250px;
+        height: 250px;
+    }
 }
 
 /* Para pantallas muy pequeñas */
@@ -770,14 +882,17 @@ header.visible {
     .clients-track {
         animation: scroll 15s linear infinite;
     }
+    
+    .team-photo {
+        width: 200px;
+        height: 200px;
+    }
 }
 
 @media (max-width: 992px) {
     .nav-links { display:none; }
     .logogandi { height:56px; transform: scale(1.4); }
     .services { padding:60px 0; }
-    .ceo-card { padding:18px; gap:12px; }
-    .ceo-photo { width:180px; height:180px; }
 }
 
 /* NUEVA SECCIÓN "NUESTRO TRABAJO" - MODIFICADA */
@@ -825,6 +940,8 @@ header.visible {
 .service-list {
     list-style: none;
     padding-left: 0;
+    margin-bottom: 15px;
+    flex-grow: 1;
 }
 
 .service-list li {
@@ -840,24 +957,6 @@ header.visible {
     color: var(--secondary);
     position: absolute;
     left: 0;
-}
-
-/* SERVICIOS CON DISEÑO ESPECIAL - Nota Técnica y Resultados */
-.services-grid-special {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 28px;
-    margin-top: 28px;
-}
-
-.services-grid-special .service-card {
-    grid-column: span 1;
-}
-
-@media (max-width: 768px) {
-    .services-grid-special {
-        grid-template-columns: 1fr;
-    }
 }
 
 /* MEJORAS PARA EL FORMULARIO DE CONTACTO */
@@ -1026,6 +1125,138 @@ header.visible {
         transform: scale(0.9);
     }
 }
+
+/* MODAL PARA SERVICIOS COMPLETOS */
+.service-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1400;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.service-modal.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.service-modal-content {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 30px;
+    max-width: 800px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    transform: translateY(20px);
+    transition: transform 0.3s ease;
+}
+
+.service-modal.active .service-modal-content {
+    transform: translateY(0);
+}
+
+.service-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.service-modal-title {
+    font-size: 1.5rem;
+    color: var(--accent);
+    margin: 0;
+}
+
+.service-modal-close {
+    background: none;
+    border: none;
+    color: var(--text);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.service-modal-close:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--accent);
+}
+
+.service-modal-body {
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+
+.service-modal-section {
+    margin-bottom: 20px;
+}
+
+.service-modal-section h4 {
+    color: var(--accent);
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+}
+
+.service-modal-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.service-modal-list li {
+    margin-bottom: 8px;
+    padding-left: 20px;
+    position: relative;
+}
+
+.service-modal-list li:before {
+    content: "•";
+    color: var(--secondary);
+    position: absolute;
+    left: 0;
+}
+
+.read-more-btn {
+    background: linear-gradient(135deg, rgba(182,23,225,0.1), rgba(60,191,242,0.1));
+    color: var(--accent);
+    border: 1px solid rgba(182,23,225,0.2);
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    margin-top: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    align-self: flex-start;
+}
+
+.read-more-btn:hover {
+    background: linear-gradient(135deg, rgba(182,23,225,0.2), rgba(60,191,242,0.2));
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(182,23,225,0.2);
+}
+
+.read-more-btn svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+}
     </style>
 </head>
 <body>
@@ -1049,7 +1280,7 @@ header.visible {
                     <a href="#inicio">Inicio</a>
                     <a href="#servicios">Servicios</a>
                     <a href="#estadisticas">Estadísticas</a>
-                    <a href="#ceo">Ceo</a>
+                    <a href="#equipo">Equipo</a>
                     <a href="#contacto">Contacto</a>
                 </div>
 
@@ -1108,7 +1339,7 @@ header.visible {
             </div>
         </section>
 
-    <!-- Services Section - ACTUALIZADA -->
+    <!-- Services Section - ACTUALIZADA CON 3 TARJETAS POR FILA -->
     <section class="services" id="servicios">
         <div class="container">
             <div class="section-title">
@@ -1116,7 +1347,7 @@ header.visible {
                 <p>Soluciones especializadas en análisis de datos para el sector salud</p>
             </div>
 
-            <!-- Primera fila - Tres servicios -->
+            <!-- Primera fila - 3 servicios -->
             <div class="services-grid">
                 <!-- Análisis de Bases de Datos de Afiliados -->
                 <div class="service-card">
@@ -1169,8 +1400,30 @@ header.visible {
                 </div>
             </div>
 
-            <!-- Segunda fila - Dos servicios especiales (Nota Técnica y Resultados) -->
-            <div class="services-grid-special">
+            <!-- Segunda fila - 3 servicios -->
+            <div class="services-grid">
+                <!-- NUEVO SERVICIO: Habilitación de Servicios de Salud -->
+                <div class="service-card">
+                    <div class="service-icon" aria-hidden="true" style="color:var(--accent);">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <h3>🔹 Habilitación de Servicios de Salud</h3>
+                    <div class="service-list">
+                        <li>Apoyo en cumplimiento normativo sanitario</li>
+                        <li>Preparación para auditorías</li>
+                        <li>Actualización del REPS</li>
+                        <li>Mejora de procesos post-visitas de control</li>
+                    </div>
+                    <button class="read-more-btn" data-service="habilitacion">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 5.83L15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z" fill="currentColor"/>
+                        </svg>
+                        Leer más
+                    </button>
+                </div>
+
                 <!-- Nota Técnica -->
                 <div class="service-card">
                     <div class="service-icon" aria-hidden="true" style="color:var(--accent);">
@@ -1234,26 +1487,76 @@ header.visible {
         </div>
     </section>
 
-    <!-- SECCIÓN CEO (debajo de Impacto Medible) - foto definida directamente en el código -->
-    
-    <section class="ceo-section" id="ceo">
-        <div class="section-title" >
-                <h2>Ceo Ganddi</h2>
-             </div>
-        <div class="ceo-card container">
-            
-            <div class="ceo-photo" aria-hidden="true">
-                <!-- Cambia la ruta a la imagen que quieras usar desde el código -->
-                <img id="ceoPhotoPreview" src="ing.png" alt="Foto del CEO">
+    <!-- SECCIÓN EQUIPO DE TRABAJO - CARRUSEL CON 3 PERSONAS -->
+    <section class="team-section" id="equipo">
+        <div class="container">
+            <div class="section-title">
+                <h2> Nuestro Equipo de Trabajo</h2>
+                <p style="color:var(--text-muted);">Conoce al equipo profesional que hace posible nuestras soluciones</p>
             </div>
-            <div class="ceo-info">
-                <div class="ceo-name">Ing. Juan Carlos Matiz Martínez</div>
-                <div class="ceo-role">Magíster en Big Data
-                 CEO & Fundador de GanddI</div>
-                <div class="ceo-bio">
-                    Juan Carlos lidera la estrategia de producto y la visión analítica en GanddI, impulsando soluciones que transforman la operación y fortalecen la Gestión del Riesgo en Salud mediante la integración y articulación inteligente de los datos que circulan en los sistemas de información de las entidades del sector.
-                    Con más de 20 años de experiencia en el sector salud, ha desarrollado su trayectoria profesional principalmente en el análisis de datos en salud, procesos de aseguramiento, gestión del riesgo, contratación, calidad y área financiera.
-                    Ha trabajado con Empresas Promotoras de Salud (EPS), Empresas Sociales del Estado (ESE), Instituciones Prestadoras de Servicios de Salud (IPS) y como profesional independiente, integrando la analítica de datos en la toma de decisiones estratégicas para mejorar los resultados en salud y la eficiencia institucional.
+            
+            <div class="team-carousel">
+                <div class="team-track" id="teamTrack">
+                    <!-- Slide 1: CEO -->
+                    <div class="team-slide">
+                        <div class="team-photo">
+                            <img src="ing.png" alt="Ing. Juan Carlos Matiz Martínez - CEO">
+                        </div>
+                        <div class="team-info">
+                            <div class="team-name">Ing. Juan Carlos Matiz Martínez</div>
+                            <div class="team-role">Magíster en Big Data - CEO & Fundador de GanddI</div>
+                            <div class="team-bio">
+                                Juan Carlos lidera la estrategia de producto y la visión analítica en GanddI, impulsando soluciones que transforman la operación y fortalecen la Gestión del Riesgo en Salud mediante la integración y articulación inteligente de los datos que circulan en los sistemas de información de las entidades del sector.
+                                Con más de 20 años de experiencia en el sector salud, ha desarrollado su trayectoria profesional principalmente en el análisis de datos en salud, procesos de aseguramiento, gestión del riesgo, contratación, calidad y área financiera.
+                                Ha trabajado con Empresas Promotoras de Salud (EPS), Empresas Sociales del Estado (ESE), Instituciones Prestadoras de Servicios de Salud (IPS) y como profesional independiente, integrando la analítica de datos en la toma de decisiones estratégicas para mejorar los resultados en salud y la eficiencia institucional.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Slide 2: Ingeniera Industrial -->
+                    <div class="team-slide">
+                        <div class="team-photo">
+                            <img src="inga.png" alt="Ingeniera Industrial - Especialista en Calidad">
+                        </div>
+                        <div class="team-info">
+                            <div class="team-name">Ing. Carolina Matiz</div>
+                            <div class="team-role">Ingeniera Industrial - Especialista en Gerencia de la Calidad y Auditoría en Salud</div>
+                            <div class="team-bio">
+                                Carolina Matiz es nuestra especialista en habilitación de servicios de salud y sistemas de gestión de calidad. Con más de 8 años de experiencia en el sector salud, se ha especializado en la implementación de normativas sanitarias, preparación para auditorías y mejora de procesos en Instituciones Prestadoras de Servicios de Salud.
+                                Su expertise incluye el diseño e implementación de Sistemas de Gestión de Calidad (SOGCS), programas de auditoría (PAMEC), gestión documental y procesos de acreditación. Ha liderado exitosamente proyectos de habilitación en más de 15 IPS a nivel nacional, garantizando el cumplimiento normativo y la excelencia operativa.
+                                Además, cuenta con certificaciones en seguridad del paciente, gestión del riesgo sanitario y protección de datos personales en el ámbito de la salud.
+                                <a href="LinkedIn:https://www.linkedin.com/in/andreamatiz?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app">Linkedin</a>
+
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Slide 3: Desarrollador de Software -->
+                    <div class="team-slide">
+                        <div class="team-photo">
+                            <img src="desarrollador.png" alt="Ing de Software - Desarrollador fullstack ">
+                        </div>
+                        <div class="team-info">
+                            <div class="team-name">Ing. Denilson Diaz Martinez</div>
+                            <div class="team-role">Ing de Software - Desarrollador fullstack</div>
+                            <div class="team-bio">
+                                Denilson Diaz es el arquitecto detrás de nuestras soluciones tecnológicas y plataformas de analytics. Con formación en ingeniería de software, ha desarrollado su carrera en la creación de sistemas inteligentes para el sector salud.
+                                Su experiencia abarca el diseño de arquitecturas de datos, implementación de algoritmos de machine learning, desarrollo de dashboards interactivos y creación de APIs para integración de sistemas. Domina tecnologías como Python, R, SQL, Power BI, Tableau y frameworks de big data.
+                                Ha liderado el desarrollo de más de 5 proyectos de analítica en salud, incluyendo sistemas de predicción de riesgos, modelos de segmentación de pacientes y plataformas de visualización de datos que han beneficiado a más de 5 entidades del sector salud en Colombia.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Controles del carrusel -->
+                <div class="team-controls">
+                    <button class="team-prev" id="teamPrev">‹</button>
+                    <div class="team-dots" id="teamDots">
+                        <div class="team-dot active" data-index="0"></div>
+                        <div class="team-dot" data-index="1"></div>
+                        <div class="team-dot" data-index="2"></div>
+                    </div>
+                    <button class="team-next" id="teamNext">›</button>
                 </div>
             </div>
         </div>
@@ -1347,6 +1650,7 @@ header.visible {
                         <option value="analisis-bases-datos">Análisis de Bases de Datos de Afiliados</option>
                         <option value="gestion-riesgos">Gestión de Riesgos en Salud</option>
                         <option value="lupa-giro">Lupa al Giro</option>
+                        <option value="habilitacion-servicios">Habilitación de Servicios de Salud</option>
                         <option value="nota-tecnica">Nota Técnica</option>
                         <option value="resultados">Resultados y Dashboards</option>
                         <option value="multiple">Múltiples servicios</option>
@@ -1390,9 +1694,9 @@ header.visible {
             <div>
                 <h4 style="color:var(--accent);">Servicios</h4>
                 <ul style="color:var(--text-muted);list-style:none;padding-left:0;margin-top:8px;">
-                    <li>Analytics Avanzado</li>
-                    <li>Business Intelligence</li>
-                    <li>Data Visualization</li>
+                    <li>Notas Tecnicas</li>
+                    <li>Gestión de Riesgos en Salud</li>
+                    <li>Lupa de Giro</li>
                 </ul>
             </div>
         </div>
@@ -1427,6 +1731,19 @@ header.visible {
                     </svg>
                     Enviar
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL PARA SERVICIOS COMPLETOS -->
+    <div class="service-modal" id="serviceModal">
+        <div class="service-modal-content">
+            <div class="service-modal-header">
+                <h3 class="service-modal-title" id="serviceModalTitle">Habilitación de Servicios de Salud</h3>
+                <button class="service-modal-close" id="serviceModalClose">&times;</button>
+            </div>
+            <div class="service-modal-body" id="serviceModalBody">
+                <!-- El contenido se llenará dinámicamente con JavaScript -->
             </div>
         </div>
     </div>
@@ -1470,6 +1787,12 @@ header.visible {
 
         // Inicializar contadores después de que la página cargue completamente
         initCounters();
+        
+        // Inicializar funcionalidad de "Leer más" para servicios
+        initServiceModals();
+        
+        // Inicializar carrusel del equipo
+        initTeamCarousel();
     });
 
     // WhatsApp funcional con respuesta inmediata
@@ -1708,6 +2031,168 @@ header.visible {
             }
         }
     });
+
+    // FUNCIONALIDAD PARA MODALES DE SERVICIOS
+    function initServiceModals() {
+        const serviceModal = document.getElementById('serviceModal');
+        const serviceModalTitle = document.getElementById('serviceModalTitle');
+        const serviceModalBody = document.getElementById('serviceModalBody');
+        const serviceModalClose = document.getElementById('serviceModalClose');
+        const readMoreButtons = document.querySelectorAll('.read-more-btn');
+        
+        // Datos completos de servicios
+        const serviceData = {
+            habilitacion: {
+                title: "Habilitación de Servicios de Salud",
+                content: `
+                    <div class="service-modal-section">
+                        <h4>1. Habilitación de Servicios de Salud</h4>
+                        <p>Apoyamos a las IPS en cumplir con la normativa sanitaria, preparar auditorías, actualizar el REPS y mejorar procesos tras las visitas de control.</p>
+                    </div>
+                    
+                    <div class="service-modal-section">
+                        <h4>2. Sistema de Gestión de Calidad (SOGCS)</h4>
+                        <p>Diseñamos e implementamos sistemas de calidad, indicadores y programas de auditoría (PAMEC), promoviendo la atención segura y la mejora continua.</p>
+                    </div>
+                    
+                    <div class="service-modal-section">
+                        <h4>3. Cumplimiento Normativo y Control Interno</h4>
+                        <p>Desarrollamos programas de cumplimiento institucional, políticas de ética y transparencia, capacitaciones en normatividad y gestión de riesgos, y auditorías de control.</p>
+                    </div>
+                    
+                    <div class="service-modal-section">
+                        <h4>4. Seguridad del Paciente y Gestión del Riesgo</h4>
+                        <p>Implementamos la política de seguridad del paciente, elaboramos mapas de riesgo, analizamos eventos adversos y fortalecemos la cultura de seguridad.</p>
+                    </div>
+                    
+                    <div class="service-modal-section">
+                        <h4>5. Talento Humano en Salud</h4>
+                        <p>Asesoramos en el registro RETHUS, diseño de perfiles de cargo, evaluación de competencias y estrategias de bienestar laboral.</p>
+                    </div>
+                    
+                    <div class="service-modal-section">
+                        <h4>6. Gestión Documental y Tecnológica</h4>
+                        <p>Brindamos acompañamiento en protección de datos personales y manejo eficiente de la información institucional.</p>
+                    </div>
+                    
+                    <div class="service-modal-section">
+                        <h4>Metodología</h4>
+                        <ul class="service-modal-list">
+                            <li>Diagnóstico inicial</li>
+                            <li>Diseño del plan de acción</li>
+                            <li>Acompañamiento técnico y capacitaciones</li>
+                            <li>Evaluación de resultados</li>
+                            <li>Informe final y plan de mejora continua</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="service-modal-section">
+                        <h4>Beneficios para las IPS</h4>
+                        <ul class="service-modal-list">
+                            <li>Cumplimiento normativo garantizado</li>
+                            <li>Reducción de riesgos y sanciones</li>
+                            <li>Fortalecimiento del sistema de calidad</li>
+                            <li>Mayor satisfacción de usuarios y auditores</li>
+                            <li>Preparación para acreditaciones o certificaciones</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="service-modal-section">
+                        <h4>Equipo Profesional</h4>
+                        <p>Contamos con una Ingeniera Industrial especialista en Gerencia de la Calidad y Auditoría en Salud, con amplia experiencia en habilitación y gestión estratégica del sector salud.</p>
+                    </div>
+                `
+            }
+        };
+        
+        // Función para abrir el modal de servicio
+        function openServiceModal(serviceId) {
+            if (serviceData[serviceId]) {
+                serviceModalTitle.textContent = serviceData[serviceId].title;
+                serviceModalBody.innerHTML = serviceData[serviceId].content;
+                serviceModal.classList.add('active');
+                document.body.style.overflow = 'hidden'; // Prevenir scroll del body
+            }
+        }
+        
+        // Función para cerrar el modal de servicio
+        function closeServiceModal() {
+            serviceModal.classList.remove('active');
+            document.body.style.overflow = ''; // Restaurar scroll del body
+        }
+        
+        // Agregar eventos a los botones "Leer más"
+        readMoreButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const serviceId = this.getAttribute('data-service');
+                openServiceModal(serviceId);
+            });
+        });
+        
+        // Cerrar modal al hacer clic en la X
+        serviceModalClose.addEventListener('click', closeServiceModal);
+        
+        // Cerrar modal al hacer clic fuera del contenido
+        serviceModal.addEventListener('click', function(e) {
+            if (e.target === serviceModal) {
+                closeServiceModal();
+            }
+        });
+        
+        // Cerrar modal con tecla Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && serviceModal.classList.contains('active')) {
+                closeServiceModal();
+            }
+        });
+    }
+
+    // FUNCIONALIDAD PARA EL CARRUSEL DEL EQUIPO
+    function initTeamCarousel() {
+        const track = document.getElementById('teamTrack');
+        const prevBtn = document.getElementById('teamPrev');
+        const nextBtn = document.getElementById('teamNext');
+        const dots = document.querySelectorAll('.team-dot');
+        
+        let currentSlide = 0;
+        const totalSlides = 3;
+        
+        // Función para actualizar la posición del carrusel
+        function updateCarousel() {
+            track.style.transform = `translateX(-${currentSlide * 100}%)`;
+            
+            // Actualizar dots activos
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentSlide);
+            });
+        }
+        
+        // Evento para botón anterior
+        prevBtn.addEventListener('click', function() {
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            updateCarousel();
+        });
+        
+        // Evento para botón siguiente
+        nextBtn.addEventListener('click', function() {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            updateCarousel();
+        });
+        
+        // Eventos para los dots
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', function() {
+                currentSlide = index;
+                updateCarousel();
+            });
+        });
+        
+        // Auto-avance cada 8 segundos
+        setInterval(function() {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            updateCarousel();
+        }, 8000);
+    }
     </script>
 </body>
 </html>
